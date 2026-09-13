@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F3F5FA">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Banksia Grove School — Smart School Platform (Demo)</title>
+<style>
+:root{
+  --primary:#1F5AF6;--on-primary:#fff;--primary-c:#E4EBFF;--on-primary-c:#0B2A8A;
+  --navy:#0F1F3D;--ink:#1B2437;--ink-2:#54607A;--ink-3:#8A94AB;
+  --bg:#F3F5FA;--surface:#FFFFFF;--surface-2:#F8FAFD;--outline:#DEE3EC;--outline-2:#EEF1F6;
+  --green:#12A150;--green-c:#E2F6EA;--orange:#F07F1A;--orange-c:#FFF0E1;--teal:#0F9D93;--teal-c:#DDF5F2;
+  --red:#D6392F;--red-c:#FCE7E5;--purple:#6D4BE0;--purple-c:#ECE6FF;--yellow:#E5A400;--yellow-c:#FFF6D8;
+  --admin:#1F5AF6;--teacher:#12A150;--student:#0F9D93;
+  --r-s:10px;--r-m:16px;--r-l:24px;
+  --shadow-1:0 1px 2px rgba(15,31,61,.06),0 1px 3px rgba(15,31,61,.04);
+  --shadow-2:0 6px 20px rgba(15,31,61,.10),0 2px 6px rgba(15,31,61,.06);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Inter,Arial,sans-serif;
+  --nav-h:64px;--top-h:60px;--rail-w:84px;--drawer-w:264px;
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);font-size:15px;line-height:1.45;min-height:100%;overscroll-behavior-y:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
+a{color:var(--primary)}
+h1,h2,h3,h4{margin:0;font-weight:600;letter-spacing:-.01em}
+h1{font-size:26px;line-height:1.2}
+h2{font-size:20px;line-height:1.25}
+h3{font-size:16px}
+p{margin:0}
+.ico{width:24px;height:24px;fill:currentColor;flex:none;display:inline-block;vertical-align:middle}
+.ico.sm{width:18px;height:18px}
+.ico.lg{width:32px;height:32px}
+:focus-visible{outline:3px solid #9DB6FF;outline-offset:2px;border-radius:8px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+.hidden{display:none!important}
+.muted{color:var(--ink-2)}
+.tiny{font-size:12px;color:var(--ink-3)}
+.small{font-size:13px}
+.strong{font-weight:600}
+.row{display:flex;align-items:center;gap:10px}
+.between{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.wrap{flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+.stack{display:flex;flex-direction:column;gap:12px}
+.mt{margin-top:16px}.mb{margin-bottom:16px}.mt-s{margin-top:8px}
+.ellipsis{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.right{text-align:right}
+.center{text-align:center}
+
+/* ---------- Login ---------- */
+.login{min-height:100vh;display:grid;grid-template-columns:1fr;background:var(--bg)}
+.login-hero{background:var(--navy);color:#fff;padding:36px 24px 28px;display:flex;flex-direction:column;justify-content:flex-end;gap:14px;position:relative;overflow:hidden}
+.login-hero .crest{width:52px;height:52px;border-radius:14px;background:var(--primary);display:grid;place-items:center;margin-bottom:6px}
+.login-hero h1{font-size:30px;line-height:1.15;max-width:22ch}
+.login-hero p{color:#B9C4DC;max-width:44ch}
+.login-hero .pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.login-hero .pill{border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:6px 12px;font-size:13px;color:#DCE3F3}
+.login-hero .glow{position:absolute;right:-90px;top:-90px;width:320px;height:320px;border-radius:50%;background:radial-gradient(closest-side,rgba(31,90,246,.55),transparent)}
+.login-body{padding:24px 20px 40px;display:flex;flex-direction:column;gap:20px;max-width:520px;width:100%;margin:0 auto}
+.role-cards{display:grid;gap:12px}
+.role-card{display:flex;align-items:center;gap:14px;background:var(--surface);border:1.5px solid var(--outline);border-radius:var(--r-m);padding:14px 16px;text-align:left;width:100%;transition:border-color .15s,transform .15s}
+.role-card:active{transform:scale(.99)}
+.role-card:hover{border-color:var(--primary)}
+.role-card .av{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:600;flex:none}
+.role-card .who{flex:1;min-width:0}
+.role-card .who b{display:block}
+.role-card .who span{color:var(--ink-2);font-size:13px}
+.divider-text{display:flex;align-items:center;gap:12px;color:var(--ink-3);font-size:13px}
+.divider-text:before,.divider-text:after{content:"";flex:1;height:1px;background:var(--outline)}
+@media (min-width:900px){
+  .login{grid-template-columns:1.1fr 1fr;min-height:100vh}
+  .login-hero{padding:56px;justify-content:center}
+  .login-hero h1{font-size:40px}
+  .login-body{justify-content:center;padding:56px 48px}
+}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;min-height:100vh;grid-template-rows:var(--top-h) 1fr;grid-template-columns:minmax(0,1fr)}
+.topbar{position:sticky;top:0;z-index:30;height:var(--top-h);background:rgba(243,245,250,.88);backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--outline-2)}
+.topbar .ttl{flex:1;min-width:0;font-size:18px;font-weight:600}
+.topbar .ttl small{display:block;font-size:12px;font-weight:400;color:var(--ink-2)}
+.icon-btn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:var(--ink);position:relative;transition:background .15s}
+.icon-btn:hover{background:rgba(15,31,61,.06)}
+.icon-btn .badge{position:absolute;top:6px;right:6px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--red);color:#fff;font-size:11px;font-weight:600;display:grid;place-items:center}
+.avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:600;font-size:13px;flex:none}
+.content{padding:16px 16px calc(var(--nav-h) + 24px + var(--safe-b));max-width:1180px;width:100%;margin:0 auto;min-width:0}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;height:calc(var(--nav-h) + var(--safe-b));padding-bottom:var(--safe-b);background:var(--surface);border-top:1px solid var(--outline-2);display:flex;justify-content:space-around}
+.bottom-nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:500;color:var(--ink-2);padding:6px 2px}
+.bottom-nav button .pill{width:52px;height:30px;border-radius:15px;display:grid;place-items:center;transition:background .15s}
+.bottom-nav button.on{color:var(--ink)}
+.bottom-nav button.on .pill{background:var(--primary-c);color:var(--on-primary-c)}
+.rail,.drawer{display:none}
+.fab{position:fixed;right:18px;bottom:calc(var(--nav-h) + 18px + var(--safe-b));z-index:29;height:56px;padding:0 20px 0 16px;border-radius:16px;background:var(--primary);color:#fff;display:flex;align-items:center;gap:8px;font-weight:600;box-shadow:0 8px 24px rgba(31,90,246,.35)}
+@media (min-width:840px){
+  .shell{grid-template-columns:var(--rail-w) minmax(0,1fr)}
+  .topbar{grid-column:2}
+  .content{grid-column:2;padding:24px 28px 48px}
+  .bottom-nav,.fab{display:none}
+  .rail{display:flex;flex-direction:column;align-items:center;gap:4px;grid-row:1/3;position:sticky;top:0;height:100vh;background:var(--surface);border-right:1px solid var(--outline-2);padding:14px 8px}
+  .rail .brand{width:48px;height:48px;border-radius:14px;background:var(--navy);display:grid;place-items:center;color:#fff;margin-bottom:12px}
+  .rail button.nav{width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:500;color:var(--ink-2);padding:8px 0}
+  .rail button.nav .pill{width:56px;height:32px;border-radius:16px;display:grid;place-items:center}
+  .rail button.nav.on{color:var(--ink)}
+  .rail button.nav.on .pill{background:var(--primary-c);color:var(--on-primary-c)}
+  .rail .spacer{flex:1}
+  .rail .primary-action{width:56px;height:56px;border-radius:16px;background:var(--primary-c);color:var(--on-primary-c);display:grid;place-items:center;margin-bottom:8px}
+}
+@media (min-width:1200px){
+  .shell{grid-template-columns:var(--drawer-w) minmax(0,1fr)}
+  .rail{display:none}
+  .drawer{display:flex;flex-direction:column;grid-row:1/3;position:sticky;top:0;height:100vh;background:var(--surface);border-right:1px solid var(--outline-2);padding:20px 14px}
+  .drawer .brand{display:flex;align-items:center;gap:12px;padding:6px 10px 18px}
+  .drawer .brand .mark{width:40px;height:40px;border-radius:12px;background:var(--navy);display:grid;place-items:center;color:#fff}
+  .drawer .brand b{display:block;font-size:15px}
+  .drawer .brand span{font-size:12px;color:var(--ink-2)}
+  .drawer .primary-action{display:flex;align-items:center;gap:10px;height:52px;padding:0 20px;border-radius:16px;background:var(--primary-c);color:var(--on-primary-c);font-weight:600;margin:0 4px 14px}
+  .drawer button.nav{display:flex;align-items:center;gap:14px;height:48px;padding:0 16px;border-radius:24px;color:var(--ink-2);font-weight:500;width:100%;text-align:left}
+  .drawer button.nav:hover{background:var(--surface-2)}
+  .drawer button.nav.on{background:var(--primary-c);color:var(--on-primary-c)}
+  .drawer .spacer{flex:1}
+  .drawer .me{display:flex;align-items:center;gap:10px;padding:10px;border-top:1px solid var(--outline-2)}
+  .drawer .me b{display:block;font-size:14px}
+  .drawer .me span{font-size:12px;color:var(--ink-2)}
+}
+
+/* ---------- Components ---------- */
+.card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-m);padding:16px;min-width:0}
+.card.tint{background:var(--surface-2)}
+.card.flat{border:0;box-shadow:var(--shadow-1)}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.card-h h3{font-size:16px}
+.card-h .link{font-size:13px;font-weight:600;color:var(--primary)}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:839px){.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:840px){.cols{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;align-items:start}.cols-eq{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}}
+.kpi{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-m);padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-height:104px}
+.kpi .lab{font-size:13px;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.kpi .val{font-size:28px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.kpi .sub{font-size:12px;color:var(--ink-3)}
+.kpi .val.blue{color:var(--primary)}.kpi .val.green{color:var(--green)}.kpi .val.orange{color:var(--orange)}.kpi .val.teal{color:var(--teal)}.kpi .val.red{color:var(--red)}
+.tile{background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-m);padding:16px 14px;display:flex;flex-direction:column;gap:10px;text-align:left;width:100%;transition:border-color .15s,background .15s}
+.tile:hover{border-color:var(--primary)}
+.tile .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center}
+.tile b{font-size:15px}
+.tile span{font-size:13px;color:var(--ink-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 20px;border-radius:22px;font-weight:600;font-size:14px;background:var(--primary);color:#fff;transition:filter .15s,transform .1s;white-space:nowrap}
+.btn:hover{filter:brightness(1.06)}
+.btn:active{transform:scale(.98)}
+.btn.tonal{background:var(--primary-c);color:var(--on-primary-c)}
+.btn.outline{background:transparent;border:1.5px solid var(--outline);color:var(--ink)}
+.btn.text{background:transparent;color:var(--primary);padding:0 12px}
+.btn.danger{background:var(--red)}
+.btn.green{background:var(--green)}
+.btn.sm{height:36px;padding:0 14px;font-size:13px}
+.btn.block{width:100%}
+.btn:disabled{opacity:.5;cursor:default}
+.chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--outline);font-size:13px;font-weight:500;background:var(--surface);color:var(--ink);white-space:nowrap}
+.chip.on{background:var(--primary-c);border-color:transparent;color:var(--on-primary-c)}
+.chip-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.chip-row::-webkit-scrollbar{display:none}
+.tag{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.tag.blue{background:var(--primary-c);color:var(--on-primary-c)}
+.tag.green{background:var(--green-c);color:#0B6B33}
+.tag.orange{background:var(--orange-c);color:#9A4D05}
+.tag.teal{background:var(--teal-c);color:#0A6F68}
+.tag.red{background:var(--red-c);color:#9A1F17}
+.tag.purple{background:var(--purple-c);color:#4629A6}
+.tag.yellow{background:var(--yellow-c);color:#7A5600}
+.tag.grey{background:var(--outline-2);color:var(--ink-2)}
+.list{display:flex;flex-direction:column}
+.item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--outline-2);text-align:left;width:100%;min-width:0}
+.item:last-child{border-bottom:0}
+.item .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none}
+.item .tx{flex:1;min-width:0}
+.item .tx b{display:block;font-size:14.5px;font-weight:600}
+.item .tx>span{display:block;font-size:13px;color:var(--ink-2)}
+.item .tx .tag{display:inline-flex;color:inherit}
+.item .tx .desc{font-size:13.5px;color:var(--ink-2);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.item.unread .tx b:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--primary);margin-right:8px;vertical-align:middle}
+.item.click{cursor:pointer;border-radius:8px}
+.item.click:hover{background:var(--surface-2)}
+.ic.blue{background:var(--primary-c);color:var(--on-primary-c)}.ic.green{background:var(--green-c);color:#0B6B33}.ic.orange{background:var(--orange-c);color:#9A4D05}.ic.teal{background:var(--teal-c);color:#0A6F68}.ic.red{background:var(--red-c);color:#9A1F17}.ic.purple{background:var(--purple-c);color:#4629A6}.ic.yellow{background:var(--yellow-c);color:#7A5600}.ic.grey{background:var(--outline-2);color:var(--ink-2)}.ic.navy{background:var(--navy);color:#fff}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:13px;font-weight:600;color:var(--ink-2)}
+.field input,.field select,.field textarea{height:46px;border:1.5px solid var(--outline);border-radius:12px;padding:0 14px;background:var(--surface);width:100%;outline:none;transition:border-color .15s}
+.field textarea{height:auto;min-height:110px;padding:12px 14px;resize:vertical;line-height:1.45}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(31,90,246,.12)}
+.field .help{font-size:12px;color:var(--ink-3)}
+.seg{display:flex;background:var(--outline-2);border-radius:12px;padding:4px;gap:4px}
+.seg button{flex:1;height:36px;border-radius:9px;font-size:13px;font-weight:600;color:var(--ink-2)}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-1)}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0}
+.switch .tg{width:48px;height:28px;border-radius:14px;background:var(--outline);position:relative;transition:background .15s;flex:none}
+.switch .tg:after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .15s;box-shadow:var(--shadow-1)}
+.switch .tg.on{background:var(--primary)}
+.switch .tg.on:after{transform:translateX(20px)}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:120px;padding-top:8px}
+.bar-chart .b{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bar-chart .b i{display:block;width:100%;max-width:40px;border-radius:6px 6px 3px 3px;background:var(--primary);transition:height .4s}
+.bar-chart .b i.low{background:var(--orange)}
+.bar-chart .b span{font-size:11px;color:var(--ink-3)}
+.progress{height:8px;border-radius:4px;background:var(--outline-2);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--primary);border-radius:4px;transition:width .4s}
+.progress i.green{background:var(--green)}.progress i.orange{background:var(--orange)}.progress i.teal{background:var(--teal)}
+.table{width:100%;border-collapse:collapse;font-size:14px}
+.table th{text-align:left;font-size:12px;color:var(--ink-3);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--outline)}
+.table td{padding:11px 10px;border-bottom:1px solid var(--outline-2);vertical-align:middle}
+.table tr:last-child td{border-bottom:0}
+.table-wrap{overflow-x:auto;margin:0 -16px;padding:0 16px}
+.empty{padding:32px 16px;text-align:center;color:var(--ink-2);display:flex;flex-direction:column;align-items:center;gap:10px}
+.empty .ic{width:56px;height:56px;border-radius:18px;display:grid;place-items:center}
+.section-h{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:22px 0 10px}
+.section-h h2{font-size:17px}
+.section-h .link{font-size:13px;font-weight:600;color:var(--primary)}
+.page-h{margin-bottom:16px}
+.page-h h1{font-size:24px}
+.page-h p{color:var(--ink-2);margin-top:4px}
+.greet{background:var(--navy);color:#fff;border-radius:var(--r-l);padding:20px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
+.greet:after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(closest-side,rgba(31,90,246,.6),transparent)}
+.greet h2{font-size:22px;position:relative}
+.greet p{color:#B9C4DC;position:relative}
+.greet .row{position:relative;margin-top:8px;flex-wrap:wrap}
+.greet .pill{background:rgba(255,255,255,.12);border-radius:999px;padding:6px 12px;font-size:13px;display:inline-flex;align-items:center;gap:6px}
+.greet.student{background:linear-gradient(135deg,#0F9D93,#0B6F69)}
+.greet.student:after{background:radial-gradient(closest-side,rgba(255,255,255,.28),transparent)}
+.greet.teacher{background:linear-gradient(135deg,#12A150,#0B6B33)}
+.greet.teacher:after{background:radial-gradient(closest-side,rgba(255,255,255,.25),transparent)}
+.timeline{display:flex;flex-direction:column}
+.tl{display:flex;gap:14px;padding:10px 0}
+.tl .t{width:52px;flex:none;font-size:13px;font-weight:600;color:var(--ink-2);padding-top:2px}
+.tl .b{flex:1;background:var(--surface);border:1px solid var(--outline);border-radius:12px;padding:10px 12px}
+.tl .b.now{border-color:var(--primary);background:var(--primary-c)}
+.tl .b b{display:block;font-size:14.5px}
+.tl .b span{font-size:13px;color:var(--ink-2)}
+.steps{display:flex;gap:8px;align-items:center}
+.steps .s{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--ink-3);text-align:center}
+.steps .s i{width:28px;height:28px;border-radius:50%;background:var(--outline-2);display:grid;place-items:center;font-style:normal;font-weight:600;font-size:12px;color:var(--ink-2)}
+.steps .s.done i{background:var(--green);color:#fff}
+.steps .s.cur i{background:var(--primary);color:#fff}
+.steps .s.done,.steps .s.cur{color:var(--ink)}
+
+/* Attendance */
+.att-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--outline-2)}
+.att-row:last-child{border-bottom:0}
+.att-row .nm{flex:1;min-width:0}
+.att-row .nm b{display:block;font-size:14.5px}
+.att-row .nm span{font-size:12px;color:var(--ink-3)}
+.att-btns{display:flex;gap:6px}
+.att-btns button{height:36px;min-width:40px;padding:0 10px;border-radius:10px;border:1.5px solid var(--outline);font-size:12.5px;font-weight:600;color:var(--ink-2);background:var(--surface)}
+.att-btns button.P.on{background:var(--green-c);border-color:var(--green);color:#0B6B33}
+.att-btns button.A.on{background:var(--red-c);border-color:var(--red);color:#9A1F17}
+.att-btns button.L.on{background:var(--orange-c);border-color:var(--orange);color:#9A4D05}
+
+/* Calendar */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal .dow{font-size:11px;font-weight:600;color:var(--ink-3);text-align:center;padding:6px 0}
+.cal .d{aspect-ratio:1;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:14px;position:relative;background:var(--surface);border:1px solid transparent}
+.cal .d.pad{background:transparent;color:var(--ink-3)}
+.cal .d.today{border-color:var(--primary);font-weight:700;color:var(--primary)}
+.cal .d.sel{background:var(--primary);color:#fff}
+.cal .d.wk{color:var(--ink-3)}
+.cal .d .dots{display:flex;gap:3px;height:6px}
+.cal .d .dots i{width:6px;height:6px;border-radius:50%}
+.dot.event{background:var(--primary)}.dot.holiday{background:var(--orange)}.dot.exam{background:var(--red)}
+.cal .d.sel .dots i{background:#fff}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--ink-2);flex-wrap:wrap}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+
+/* Bus map */
+.map{position:relative;background:#EAF1EA;border-radius:var(--r-m);overflow:hidden;border:1px solid var(--outline)}
+.map svg{display:block;width:100%;height:auto}
+.map .status{position:absolute;top:12px;left:12px;display:flex;gap:8px}
+.map .live{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;box-shadow:var(--shadow-1)}
+.map .live i{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(18,161,80,.5)}70%{box-shadow:0 0 0 8px rgba(18,161,80,0)}100%{box-shadow:0 0 0 0 rgba(18,161,80,0)}}
+.stops{display:flex;flex-direction:column}
+.stop{display:flex;gap:12px;align-items:flex-start;padding:8px 0}
+.stop .ln{width:24px;display:flex;flex-direction:column;align-items:center;flex:none}
+.stop .ln i{width:12px;height:12px;border-radius:50%;border:2.5px solid var(--outline);background:#fff;flex:none}
+.stop .ln:after{content:"";flex:1;width:2px;background:var(--outline-2);min-height:22px;margin-top:2px}
+.stop:last-child .ln:after{display:none}
+.stop.done .ln i{background:var(--green);border-color:var(--green)}
+.stop.next .ln i{background:var(--primary);border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-c)}
+.stop .tx{flex:1}
+.stop .tx b{display:block;font-size:14px}
+.stop .tx span{font-size:12.5px;color:var(--ink-2)}
+.stop .eta{font-size:13px;font-weight:600;color:var(--ink-2);white-space:nowrap}
+.stop.next .eta{color:var(--primary)}
+.stop.done .eta{color:var(--green)}
+
+/* Modal / sheet */
+.scrim{position:fixed;inset:0;background:rgba(15,31,61,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center;animation:fade .15s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.sheet{background:var(--surface);width:100%;max-height:92vh;border-radius:24px 24px 0 0;display:flex;flex-direction:column;animation:up .22s cubic-bezier(.2,.8,.2,1)}
+@keyframes up{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
+.sheet .grab{width:36px;height:4px;border-radius:2px;background:var(--outline);margin:10px auto 0}
+.sheet-h{display:flex;align-items:center;gap:8px;padding:10px 12px 8px 20px}
+.sheet-h h2{flex:1;font-size:18px}
+.sheet-b{padding:4px 20px 20px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.sheet-f{padding:12px 20px calc(16px + var(--safe-b));border-top:1px solid var(--outline-2);display:flex;gap:10px;justify-content:flex-end}
+.sheet-f .btn{flex:1}
+@media (min-width:640px){
+  .scrim{align-items:center;padding:24px}
+  .sheet{max-width:560px;border-radius:24px;max-height:86vh}
+  .sheet .grab{display:none}
+  .sheet-f .btn{flex:none}
+}
+.snack{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--nav-h) + 16px + var(--safe-b));z-index:60;background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;box-shadow:var(--shadow-2);display:flex;align-items:center;gap:10px;max-width:min(92vw,480px);animation:up .2s}
+@media (min-width:840px){.snack{bottom:24px}}
+.push{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:70;width:min(94vw,420px);background:var(--surface);border-radius:18px;box-shadow:var(--shadow-2);padding:12px 14px;display:flex;gap:12px;align-items:flex-start;animation:down .25s cubic-bezier(.2,.8,.2,1);border:1px solid var(--outline)}
+@keyframes down{from{transform:translate(-50%,-30px);opacity:0}to{transform:translateX(-50%);opacity:1}}
+.push .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none}
+.push b{display:block;font-size:14px}
+.push span{font-size:13px;color:var(--ink-2);display:block}
+.push small{font-size:11px;color:var(--ink-3)}
+.notif-panel{position:fixed;inset:0;z-index:45;background:var(--bg);display:flex;flex-direction:column;animation:fade .15s}
+@media (min-width:840px){.notif-panel{left:auto;top:8px;right:8px;bottom:auto;width:400px;max-height:80vh;border-radius:20px;box-shadow:var(--shadow-2);border:1px solid var(--outline);background:var(--surface)}}
+.notif-panel .hd{display:flex;align-items:center;gap:8px;padding:10px 12px 10px 20px;border-bottom:1px solid var(--outline-2)}
+.notif-panel .hd h2{flex:1;font-size:18px}
+.notif-panel .bd{overflow-y:auto;padding:4px 16px 24px}
+.search-box{display:flex;align-items:center;gap:10px;height:46px;border-radius:23px;background:var(--surface);border:1.5px solid var(--outline);padding:0 14px}
+.search-box input{border:0;outline:none;flex:1;background:transparent;min-width:0}
+.pri-urgent{border-left:4px solid var(--red)}
+.big-num{font-size:34px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.donut{width:88px;height:88px;border-radius:50%;display:grid;place-items:center;position:relative;flex:none}
+.donut:after{content:"";position:absolute;inset:10px;border-radius:50%;background:var(--surface)}
+.donut b{position:relative;font-size:18px}
+.role-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;color:#fff}
+.two-col{display:grid;gap:12px}
+@media (min-width:640px){.two-col{grid-template-columns:1fr 1fr}}
+.hint{background:var(--yellow-c);border-radius:12px;padding:10px 12px;font-size:13px;color:#7A5600;display:flex;gap:8px;align-items:flex-start}
+.demo-tip{position:fixed;left:12px;bottom:calc(var(--nav-h) + 12px + var(--safe-b));z-index:28;font-size:11px;color:var(--ink-3);background:rgba(255,255,255,.8);padding:4px 8px;border-radius:8px;display:none}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal"></div>
+<div id="snack"></div>
+<div id="push"></div>
+<script>
+/* ===== Icons (Material Symbols outlines, inline SVG) ===== */
+const ICON_PATHS = {
+  home:"M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z",
+  menu:"M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z",
+  search:"M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z",
+  add:"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z",
+  close:"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z",
+  check:"M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z",
+  back:"M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z",
+  chevron:"M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z",
+  more:"M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z",
+  bell:"M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z",
+  campaign:"M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z",
+  bus:"M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z",
+  calendar:"M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z",
+  school:"M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3 1 9l11 6 9-4.91V17h2V9L12 3z",
+  group:"M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z",
+  person:"M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z",
+  assignment:"M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z",
+  attendance:"M20 3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM10 17H5v-2h5v2zm0-4H5v-2h5v2zm0-4H5V7h5v2zm4.82 6L12 12.16l1.41-1.41 1.41 1.42L17.99 9l1.42 1.42L14.82 15z",
+  dashboard:"M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z",
+  clock:"M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z",
+  place:"M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z",
+  send:"M2.01 21 23 12 2.01 3 2 10l15 2-15 2z",
+  logout:"M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z",
+  settings:"M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z",
+  quiz:"M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-4.5 12h-2v-2h2v2zm.5-4.8c-.44.6-.8 1.03-.8 1.8h-1.4c0-1.1.44-1.78.87-2.31.62-.75 1.03-1.12 1.03-1.69 0-.56-.45-1-1-1s-1 .44-1 1H12c0-1.1.9-2 2-2s2 .9 2 2c0 .96-.55 1.51-1 2.2z",
+  chat:"M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z",
+  edit:"M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z",
+  download:"M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z",
+  warning:"M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z",
+  info:"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z",
+  doneall:"M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41 6 19l1.41-1.41L1.83 12 .41 13.41z",
+  filter:"M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z",
+  history:"M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z",
+  trend:"M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z",
+  star:"M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z",
+  eye:"M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z",
+  attach:"M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z",
+  map:"M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z",
+  delete:"M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z",
+  forward:"M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z",
+  chart:"M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z",
+  timetable:"M3 5h18v2H3zm0 6h18v2H3zm0 6h12v2H3z",
+  sun:"M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z",
+  shield:"M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z",
+  driver:"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2a7.2 7.2 0 0 1-6-3.22c.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08a7.2 7.2 0 0 1-6 3.22z",
+  bolt:"M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"
+};
+const ic = (n, cls="") => `<svg class="ico ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICON_PATHS[n]||ICON_PATHS.info}"/></svg>`;
+
+/* ===== Seed data — Banksia Grove School, Victoria ===== */
+const TODAY = new Date(2026, 8, 14); // Monday 14 September 2026 (school day for the demo)
+const SCHOOL = { name:"Banksia Grove School", short:"BGS", suburb:"Glen Waverley, VIC", term:"Term 3, 2026", termEnds:"Fri 18 Sep" };
+const YEARS = [7,8,9,10,11,12];
+const SECTIONS = YEARS.flatMap(y => ["A","B"].map(s => `${y}${s}`));
+const SUBJECT_COLORS = { Mathematics:"blue", English:"purple", Science:"green", Humanities:"orange", "Physical Education":"teal", Art:"yellow", "Digital Technologies":"red", Music:"purple", LOTE:"teal", Homeroom:"grey" };
+
+const USERS = [
+  { id:"u-admin", role:"admin", name:"David Okafor", initials:"DO", title:"Deputy Principal · School Office", color:"#1F5AF6", email:"d.okafor@bgs.vic.edu.au" },
+  { id:"u-teacher", role:"teacher", name:"Sarah Whitfield", initials:"SW", title:"Mathematics · Homeroom 8A", color:"#12A150", email:"s.whitfield@bgs.vic.edu.au", classes:["8A","8B","9A"], homeroom:"8A" },
+  { id:"u-student", role:"student", name:"Mia Nguyen", initials:"MN", title:"Year 8 · 8A · Bus Route 12", color:"#0F9D93", email:"mia.nguyen@students.bgs.vic.edu.au", year:8, section:"8A", route:"R12", studentId:"BGS-2024-0817" }
+];
+
+const FIRST = ["Ava","Oliver","Charlotte","Noah","Amelia","Jack","Isla","William","Mia","Leo","Grace","Henry","Chloe","Lucas","Zoe","Ethan","Ruby","Liam","Harper","Kai","Sienna","Arjun","Aisha","Tom","Priya","Hamza","Evie","Xavier","Matilda","Rafael"];
+const LAST = ["Nguyen","Smith","Chen","Williams","Patel","Brown","Singh","Taylor","Kim","Wilson","Tran","Jones","Kumar","Martin","Lee","White","Thompson","Hussain","Walker","Ryan","Papadopoulos","Rossi","Ahmed","O'Connor","Ng"];
+function seededRand(seed){ let s = seed; return () => { s = (s*9301+49297)%233280; return s/233280; }; }
+function makeRoster(section, n, seed){
+  const r = seededRand(seed); const out=[]; const used=new Set();
+  while(out.length<n){ const nm = FIRST[Math.floor(r()*FIRST.length)]+" "+LAST[Math.floor(r()*LAST.length)]; if(used.has(nm)) continue; used.add(nm);
+    out.push({ id:`${section}-${out.length+1}`, name:nm, section, att: Math.round(88+r()*11), status:null }); }
+  return out;
+}
+const ROSTERS = { "8A": makeRoster("8A",26,11), "8B": makeRoster("8B",25,23), "9A": makeRoster("9A",27,37) };
+ROSTERS["8A"][7].name = "Mia Nguyen"; ROSTERS["8A"][7].id="8A-mia"; ROSTERS["8A"][7].att=96;
+
+const PERIODS = [
+  { p:1, t:"8:50" }, { p:2, t:"9:45" }, { p:"Recess", t:"10:40" }, { p:3, t:"11:05" }, { p:4, t:"12:00" }, { p:"Lunch", t:"12:55" }, { p:5, t:"1:45" }, { p:6, t:"2:40" }
+];
+const TIMETABLE_8A = { // Mon..Fri, 6 periods
+  Mon:["Homeroom","Mathematics","English","Science","Humanities","Physical Education"],
+  Tue:["Mathematics","Science","Art","English","LOTE","Digital Technologies"],
+  Wed:["English","Humanities","Mathematics","Music","Science","Physical Education"],
+  Thu:["Science","Mathematics","LOTE","English","Digital Technologies","Humanities"],
+  Fri:["Humanities","English","Mathematics","Art","Science","Music"]
+};
+const ROOMS = { Mathematics:"B12", English:"A04", Science:"Lab 2", Humanities:"C07", "Physical Education":"Gym", Art:"Studio 1", "Digital Technologies":"ICT 3", Music:"M1", LOTE:"A09", Homeroom:"B12" };
+const TEACHERS_BY_SUBJECT = { Mathematics:"Ms Whitfield", English:"Mr Carey", Science:"Dr Mahmood", Humanities:"Ms Papas", "Physical Education":"Mr Fitzgerald", Art:"Ms Lund", "Digital Technologies":"Mr Bhatt", Music:"Mrs Alvarez", LOTE:"Sensei Tanaka", Homeroom:"Ms Whitfield" };
+const TEACHER_TIMETABLE = { // Sarah Whitfield, Monday
+  Mon:[{p:1,cls:"8A",sub:"Homeroom",room:"B12"},{p:2,cls:"8A",sub:"Mathematics",room:"B12"},{p:3,cls:"9A",sub:"Mathematics",room:"B14"},{p:4,cls:"8B",sub:"Mathematics",room:"B12"},{p:5,cls:null,sub:"Planning",room:"Staffroom"},{p:6,cls:"9A",sub:"Mathematics",room:"B14"}]
+};
+
+let NOTICE_SEQ = 100;
+const NOTICES = [
+  { id:1, title:"Term 3 concludes Friday 18 September — 2:30 pm dismissal", body:"Students will be dismissed at 2:30 pm on Friday 18 September. Buses will depart 15 minutes earlier than usual. Term 4 begins Monday 5 October.", category:"Announcement", target:{level:"school"}, priority:"normal", author:"School Office", when:"2026-09-11T08:10", status:"published", push:true, recipients:3026, delivered:2988, read:2411 },
+  { id:2, title:"Bus Route 12 running 10 minutes late this morning", body:"Route 12 (Wheelers Hill – Glen Waverley) is delayed due to roadworks on Springvale Road. Students at remaining stops should wait at their usual stop.", category:"Transport", target:{level:"route", value:"R12"}, priority:"urgent", author:"Transport Office", when:"2026-09-14T07:42", status:"published", push:true, recipients:41, delivered:41, read:33 },
+  { id:3, title:"Year 8 Term 3 examination timetable published", body:"The Year 8 Term 3 examination timetable is now live in the Exams tab. Students should check their room allocations and arrive 10 minutes before each paper.", category:"Exam", target:{level:"year", value:8}, priority:"normal", author:"Curriculum Office", when:"2026-09-10T15:30", status:"published", push:true, recipients:452, delivered:448, read:390 },
+  { id:4, title:"8A: Maths homework — Chapter 7 exercises due Wednesday", body:"Complete exercises 7.3 and 7.4 (odd numbers) from the textbook. Show all working. Bring your calculator to Wednesday's class.", category:"Homework", target:{level:"class", value:"8A"}, priority:"normal", author:"Sarah Whitfield", when:"2026-09-11T14:20", status:"published", push:true, recipients:26, delivered:26, read:22 },
+  { id:5, title:"AFL Grand Final public holiday — Friday 25 September", body:"The school is closed on Friday 25 September for the AFL Grand Final public holiday, which falls within the Term 3 break.", category:"Holiday", target:{level:"school"}, priority:"normal", author:"School Office", when:"2026-09-08T09:00", status:"published", push:false, recipients:3026, delivered:3010, read:2202 },
+  { id:6, title:"Athletics carnival — Wednesday 16 September", body:"House athletics carnival at Central Reserve. Students wear house colours and sports uniform. Sunscreen and hats are compulsory. Canteen will operate on site.", category:"Event", target:{level:"school"}, priority:"normal", author:"Sports Department", when:"2026-09-09T10:15", status:"published", push:true, recipients:3026, delivered:2996, read:2650 },
+  { id:7, title:"Year 8 Science: Bring lab coats for Tuesday's practical", body:"All Year 8 students need their lab coat and safety glasses for the acid–base practical in Lab 2 on Tuesday.", category:"Circular", target:{level:"year", value:8}, priority:"normal", author:"Dr Mahmood", when:"2026-09-12T16:05", status:"published", push:true, recipients:452, delivered:450, read:301 },
+  { id:8, title:"Parent–teacher interviews open for booking (Term 4, Week 2)", body:"Bookings for Term 4 parent–teacher interviews open on the Compass portal from Monday 21 September.", category:"Announcement", target:{level:"school"}, priority:"normal", author:"School Office", when:"2026-09-21T08:00", status:"scheduled", push:true, recipients:3026, delivered:0, read:0 }
+];
+const READ_BY_STUDENT = new Set([1,5,6]);
+
+const CAL = [ // yyyy-mm-dd
+  { d:"2026-09-14", type:"exam", title:"Year 8 Mathematics — Term 3 exam" },
+  { d:"2026-09-15", type:"event", title:"Year 8 Science practical (Lab 2)" },
+  { d:"2026-09-16", type:"event", title:"House athletics carnival" },
+  { d:"2026-09-16", type:"exam", title:"Year 8 Science — Term 3 exam" },
+  { d:"2026-09-17", type:"exam", title:"Year 8 English — Term 3 exam" },
+  { d:"2026-09-18", type:"event", title:"Last day of Term 3 — 2:30 pm dismissal" },
+  { d:"2026-09-21", type:"holiday", title:"Term 3 holidays begin" },
+  { d:"2026-09-25", type:"holiday", title:"AFL Grand Final public holiday" },
+  { d:"2026-10-05", type:"event", title:"Term 4 begins" },
+  { d:"2026-10-14", type:"event", title:"Parent–teacher interviews (Term 4, Wk 2)" },
+  { d:"2026-10-22", type:"event", title:"Year 12 Valedictory dinner" },
+  { d:"2026-10-27", type:"exam", title:"VCE written exams begin" },
+  { d:"2026-11-03", type:"holiday", title:"Melbourne Cup Day public holiday" },
+  { d:"2026-11-20", type:"event", title:"Annual concert — School Hall" },
+  { d:"2026-12-04", type:"event", title:"Year 7 Orientation day" },
+  { d:"2026-12-17", type:"event", title:"Last day of Term 4" },
+  { d:"2026-09-02", type:"event", title:"Year 7 camp departs — Phillip Island" },
+  { d:"2026-09-08", type:"event", title:"School Council meeting" }
+];
+
+const EXAMS = [
+  { id:"e1", subject:"Mathematics", date:"2026-09-14", time:"9:00", dur:90, year:8, sections:"A / B", venue:"School Hall", status:"published" },
+  { id:"e2", subject:"Science", date:"2026-09-16", time:"9:00", dur:75, year:8, sections:"A / B", venue:"School Hall", status:"published" },
+  { id:"e3", subject:"English", date:"2026-09-17", time:"9:00", dur:90, year:8, sections:"A / B", venue:"School Hall", status:"published" },
+  { id:"e4", subject:"Humanities", date:"2026-10-07", time:"9:00", dur:60, year:8, sections:"A / B", venue:"Library", status:"upcoming" },
+  { id:"e5", subject:"Digital Technologies", date:"2026-10-09", time:"11:05", dur:60, year:8, sections:"A / B", venue:"ICT 3", status:"upcoming" },
+  { id:"e6", subject:"Mathematics", date:"2026-09-15", time:"9:00", dur:90, year:9, sections:"A / B", venue:"Gym", status:"published" },
+  { id:"e7", subject:"Mathematics Methods", date:"2026-10-27", time:"9:00", dur:120, year:12, sections:"All", venue:"School Hall", status:"upcoming" }
+];
+
+const ASSIGNMENTS = [
+  { id:"a1", cls:"8A", subject:"Mathematics", title:"Chapter 7 exercises 7.3–7.4", due:"2026-09-16", status:"todo", teacher:"Ms Whitfield" },
+  { id:"a2", cls:"8A", subject:"English", title:"Persuasive essay — 'Should school start later?'", due:"2026-09-18", status:"todo", teacher:"Mr Carey" },
+  { id:"a3", cls:"8A", subject:"Science", title:"Practical report: acid–base titration", due:"2026-09-22", status:"todo", teacher:"Dr Mahmood" },
+  { id:"a4", cls:"8A", subject:"Humanities", title:"Federation timeline poster", due:"2026-09-11", status:"submitted", teacher:"Ms Papas" },
+  { id:"a5", cls:"8A", subject:"Art", title:"Self-portrait in charcoal", due:"2026-09-10", status:"marked", grade:"A-", teacher:"Ms Lund" },
+  { id:"a6", cls:"8A", subject:"Digital Technologies", title:"Scratch game prototype", due:"2026-10-08", status:"todo", teacher:"Mr Bhatt" },
+  { id:"a7", cls:"8B", subject:"Mathematics", title:"Chapter 7 exercises 7.3–7.4", due:"2026-09-17", status:"todo", teacher:"Ms Whitfield" },
+  { id:"a8", cls:"9A", subject:"Mathematics", title:"Linear graphs investigation", due:"2026-09-18", status:"todo", teacher:"Ms Whitfield" }
+];
+
+const BUSES = [
+  { id:"R12", route:"Route 12", name:"Wheelers Hill – Glen Waverley", rego:"BUS-412", driver:"Kevin Marsh", status:"moving", capacity:57, riders:41, run:"Morning run", delay:10,
+    stops:[{n:"Jells Park Shopping Centre",t:"7:35"},{n:"Wheelers Hill Village",t:"7:43"},{n:"Brandon Park",t:"7:52"},{n:"Springvale Rd / High St Rd",t:"8:01"},{n:"Glen Waverley Station",t:"8:10"},{n:"Banksia Grove School",t:"8:22"}] },
+  { id:"R7", route:"Route 7", name:"Mount Waverley loop", rego:"BUS-407", driver:"Angela Ruiz", status:"moving", capacity:45, riders:38, run:"Morning run", delay:0,
+    stops:[{n:"Pinewood Shopping Village",t:"7:40"},{n:"Mount Waverley Station",t:"7:50"},{n:"Damper Creek Reserve",t:"7:58"},{n:"Banksia Grove School",t:"8:15"}] },
+  { id:"R3", route:"Route 3", name:"Burwood East – Vermont South", rego:"BUS-403", driver:"Priya Raman", status:"arrived", capacity:57, riders:52, run:"Morning run", delay:0,
+    stops:[{n:"Burwood One",t:"7:30"},{n:"Vermont South Shopping Centre",t:"7:41"},{n:"Highbury Rd / Blackburn Rd",t:"7:49"},{n:"Banksia Grove School",t:"8:05"}] },
+  { id:"R19", route:"Route 19", name:"Rowville – Scoresby", rego:"BUS-419", driver:"Unassigned", status:"needs-driver", capacity:45, riders:33, run:"Morning run", delay:0,
+    stops:[{n:"Stud Park Shopping Centre",t:"7:25"},{n:"Rowville Lakes",t:"7:34"},{n:"Scoresby Village",t:"7:45"},{n:"Banksia Grove School",t:"8:12"}] },
+  { id:"R5", route:"Route 5", name:"Clayton – Oakleigh", rego:"BUS-405", driver:"Tony Bekiaris", status:"maintenance", capacity:57, riders:0, run:"Off road", delay:0,
+    stops:[{n:"Clayton Station",t:"7:30"},{n:"Oakleigh Central",t:"7:42"},{n:"Banksia Grove School",t:"8:08"}] }
+];
+const FLEET_TOTAL = 34, FLEET_OPERATIONAL = 32;
+
+const MESSAGES = [
+  { id:"m1", from:"Mr Carey", to:"student", subject:"Essay draft feedback", text:"Great thesis statement, Mia. Tighten paragraph two and you're there.", when:"2026-09-13T17:20", read:false },
+  { id:"m2", from:"Sports Department", to:"student", subject:"Carnival team list", text:"You're in the 100 m and long jump for Banksia House on Wednesday.", when:"2026-09-12T11:00", read:true },
+  { id:"m3", from:"Parent — J. Nguyen (8A)", to:"teacher", subject:"Mia away Thursday afternoon", text:"Hi Ms Whitfield, Mia has an orthodontist appointment at 2 pm Thursday. She'll miss period 6.", when:"2026-09-13T20:05", read:false },
+  { id:"m4", from:"Curriculum Office", to:"teacher", subject:"Exam supervision roster", text:"You're rostered for School Hall, Wednesday 9:00–10:15 (Year 8 Science).", when:"2026-09-12T09:30", read:false },
+  { id:"m5", from:"Dr Mahmood", to:"teacher", subject:"Shared 8A students", text:"Noticing Ethan T. is struggling with graphing in science too — worth a chat this week?", when:"2026-09-11T15:45", read:true }
+];
+
+const ACTIVITY = [
+  { when:"2026-09-14T07:42", who:"Transport Office", what:"Published urgent notice to Route 12 riders" },
+  { when:"2026-09-13T16:10", who:"David Okafor", what:"Scheduled notice “Parent–teacher interviews” for 21 Sep" },
+  { when:"2026-09-12T16:05", who:"Dr Mahmood", what:"Published circular to Year 8" },
+  { when:"2026-09-12T09:14", who:"David Okafor", what:"Assigned driver Angela Ruiz to Route 7" },
+  { when:"2026-09-11T14:20", who:"Sarah Whitfield", what:"Posted homework to 8A" },
+  { when:"2026-09-11T09:02", who:"David Okafor", what:"Exported attendance report (Week 9)" }
+];
+
+const ATTENDANCE_TREND = [ {d:"Mon",v:95.1},{d:"Tue",v:94.3},{d:"Wed",v:96.0},{d:"Thu",v:93.2},{d:"Fri",v:91.8},{d:"Mon",v:94.6},{d:"Tue",v:95.4} ];
+const STUDENT_ATT_HISTORY = { present:64, late:2, absent:1, total:67, recent:[
+  {d:"Fri 11 Sep", s:"P"},{d:"Thu 10 Sep", s:"P"},{d:"Wed 9 Sep", s:"L", note:"Arrived 9:05 — bus delay"},{d:"Tue 8 Sep", s:"P"},{d:"Mon 7 Sep", s:"P"},{d:"Fri 4 Sep", s:"A", note:"Medical certificate received"},{d:"Thu 3 Sep", s:"P"} ] };
+
+const PENDING_TEACHER_ACTIONS = [
+  { cls:"7B", teacher:"Mr Fitzgerald", what:"Period 1 roll not marked" },
+  { cls:"10A", teacher:"Ms Lund", what:"Period 1 roll not marked" },
+  { cls:"11A", teacher:"Mr Bhatt", what:"Exam results overdue" }
+];
+
+/* ===== State ===== */
+const state = {
+  user:null, route:"home", params:{}, modal:null, sheetData:{}, notifOpen:false,
+  calMonth:new Date(2026,8,1), calSel:"2026-09-14",
+  updatesFilter:"all", peopleTab:"students", peopleQ:"", transportSel:"R12",
+  attDraft:{}, attSubmitted:{}, examYear:8, reminders:true, pushPrefs:{urgent:true,updates:true,homework:true,bus:true,exams:true},
+  bus:{}, notifs:{admin:[],teacher:[],student:[]}, pushQueue:[], moreOpen:false
+};
+BUSES.forEach(b => state.bus[b.id] = { progress: b.status==="moving" ? (b.id==="R12"?0.58:0.35) : (b.status==="arrived"?1:0) });
+// seed notification centres
+state.notifs.student = [
+  { id:"n1", title:"Bus Route 12 running 10 minutes late", body:"Roadworks on Springvale Rd. Wait at your usual stop.", type:"bus", when:"2026-09-14T07:42", read:false, link:{route:"transport"} },
+  { id:"n2", title:"Reminder: Mathematics exam today, 9:00 am", body:"School Hall. Arrive 10 minutes early with calculator and pens.", type:"exam", when:"2026-09-14T07:00", read:false, link:{route:"exams"} },
+  { id:"n3", title:"New message from Mr Carey", body:"Essay draft feedback", type:"message", when:"2026-09-13T17:20", read:false, link:{route:"messages"} },
+  { id:"n4", title:"Year 8 Science: Bring lab coats for Tuesday", body:"Circular from Dr Mahmood", type:"update", when:"2026-09-12T16:05", read:true, link:{route:"updates", id:7} }
+];
+state.notifs.teacher = [
+  { id:"t1", title:"Roll for 8A period 1 opens at 8:50", body:"Mark attendance before 9:05 to avoid a follow-up from the office.", type:"attendance", when:"2026-09-14T08:40", read:false, link:{route:"classes", cls:"8A"} },
+  { id:"t2", title:"Parent message: Mia away Thursday afternoon", body:"J. Nguyen (8A)", type:"message", when:"2026-09-13T20:05", read:false, link:{route:"messages"} },
+  { id:"t3", title:"You're rostered for exam supervision Wednesday", body:"School Hall 9:00–10:15", type:"exam", when:"2026-09-12T09:30", read:true, link:{route:"messages"} }
+];
+state.notifs.admin = [
+  { id:"a1", title:"Route 19 has no driver assigned for tomorrow", body:"33 riders affected. Assign a relief driver.", type:"bus", when:"2026-09-14T07:30", read:false, link:{route:"transport", id:"R19"} },
+  { id:"a2", title:"3 pending teacher actions", body:"Two unmarked rolls and one overdue result entry.", type:"attendance", when:"2026-09-14T09:10", read:false, link:{route:"home"} },
+  { id:"a3", title:"Notice scheduled for 21 Sep", body:"Parent–teacher interviews open for booking", type:"update", when:"2026-09-13T16:10", read:true, link:{route:"updates"} }
+];
+
+/* ===== Helpers ===== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad = n => String(n).padStart(2,"0");
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DOWS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+function parseD(s){ const [y,m,d] = s.split("T")[0].split("-").map(Number); return new Date(y,m-1,d); }
+function fmtD(s, opts={}){ const d = typeof s==="string" ? parseD(s) : s; const base = `${DOWS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)}`; return opts.year ? base+` ${d.getFullYear()}` : base; }
+function fmtT(s){ if(!s.includes("T")) return ""; let [h,m] = s.split("T")[1].split(":").map(Number); const ap = h>=12?"pm":"am"; h = h%12||12; return `${h}:${pad(m)} ${ap}`; }
+function ampm(t){ let [h,m]=t.split(":").map(Number); const ap=h>=12?"pm":"am"; h=h%12||12; return `${h}:${pad(m)} ${ap}`; }
+function rel(s){ const d = new Date(s); const now = new Date(2026,8,14,9,15); const diff = (now-d)/60000; if(diff<0) return fmtD(s)+" · "+fmtT(s); if(diff<60) return `${Math.max(1,Math.round(diff))} min ago`; if(diff<60*24 && d.getDate()===now.getDate()) return `Today ${fmtT(s)}`; if(diff<60*48) return `Yesterday ${fmtT(s)}`; return fmtD(s); }
+function isoToday(){ return `2026-09-14`; }
+function toISO(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+const CAT_COLOR = { Announcement:"blue", Circular:"purple", Event:"teal", Holiday:"orange", Exam:"red", Transport:"yellow", Homework:"green", Urgent:"red" };
+const CAT_ICON = { Announcement:"campaign", Circular:"assignment", Event:"star", Holiday:"sun", Exam:"quiz", Transport:"bus", Homework:"assignment" };
+function targetLabel(t){ if(t.level==="school") return "Whole school"; if(t.level==="year") return `Year ${t.value}`; if(t.level==="class") return `Class ${t.value}`; if(t.level==="route") return `Bus ${t.value.replace("R","Route ")} riders`; if(t.level==="section") return `Section ${t.value}`; return t.value; }
+function noticeVisibleTo(n, u){
+  if(n.status!=="published") return u.role!=="student";
+  if(u.role!=="student") return true;
+  const t=n.target; if(t.level==="school") return true; if(t.level==="year") return t.value===u.year; if(t.level==="class") return t.value===u.section; if(t.level==="route") return t.value===u.route; return true;
+}
+function unreadNotifs(){ return state.user ? state.notifs[state.user.role].filter(n=>!n.read).length : 0; }
+
+/* ===== Navigation ===== */
+const NAV = {
+  admin:[ {r:"home",l:"Dashboard",i:"dashboard"},{r:"updates",l:"Updates",i:"campaign"},{r:"calendar",l:"Calendar",i:"calendar"},{r:"transport",l:"Transport",i:"bus"},{r:"people",l:"People",i:"group"},{r:"exams",l:"Exams",i:"quiz"},{r:"reports",l:"Reports",i:"chart"},{r:"activity",l:"Activity",i:"history"},{r:"settings",l:"Settings",i:"settings"} ],
+  teacher:[ {r:"home",l:"Home",i:"home"},{r:"classes",l:"My classes",i:"school"},{r:"updates",l:"Updates",i:"campaign"},{r:"calendar",l:"Calendar",i:"calendar"},{r:"messages",l:"Messages",i:"chat"},{r:"timetable",l:"Timetable",i:"timetable"},{r:"exams",l:"Exams",i:"quiz"},{r:"transport",l:"Transport",i:"bus"},{r:"settings",l:"Settings",i:"settings"} ],
+  student:[ {r:"home",l:"Home",i:"home"},{r:"updates",l:"Updates",i:"campaign"},{r:"transport",l:"My bus",i:"bus"},{r:"timetable",l:"Timetable",i:"timetable"},{r:"assignments",l:"Assignments",i:"assignment"},{r:"attendance",l:"Attendance",i:"attendance"},{r:"exams",l:"Exams",i:"quiz"},{r:"calendar",l:"Calendar",i:"calendar"},{r:"messages",l:"Messages",i:"chat"},{r:"settings",l:"Profile",i:"person"} ]
+};
+const PAGE_TITLES = { home:"Home", updates:"School updates", calendar:"Calendar", transport:"Transport", people:"People", exams:"Examinations", reports:"Reports", activity:"Activity history", settings:"Settings", classes:"My classes", messages:"Messages", timetable:"Timetable", assignments:"Assignments", attendance:"Attendance", classDetail:"Class" };
+
+function go(route, params={}){ state.route = route; state.params = params; state.moreOpen=false; state.notifOpen=false; render(); window.scrollTo({top:0}); }
+function login(id){ state.user = USERS.find(u=>u.id===id); state.route="home"; state.params={}; render(); setTimeout(()=>{ if(state.user.role==="student") pushToast({title:"Bus Route 12 running 10 minutes late", body:"Roadworks on Springvale Rd — wait at your usual stop.", type:"bus"}); },900); }
+function logout(){ state.user=null; state.modal=null; state.notifOpen=false; render(); }
+
+/* ===== Modals, snackbars, pushes ===== */
+function openSheet(kind, data={}){ state.modal=kind; state.sheetData=data; render(); }
+function closeSheet(){ state.modal=null; state.sheetData={}; render(); }
+let snackTimer;
+function snack(msg, icon="check"){ const el = $("#snack"); el.innerHTML = `<div class="snack">${ic(icon,"sm")}<span>${esc(msg)}</span></div>`; clearTimeout(snackTimer); snackTimer=setTimeout(()=>el.innerHTML="",3200); }
+const PUSH_STYLE = { bus:["orange","bus"], exam:["red","quiz"], message:["purple","chat"], update:["blue","campaign"], attendance:["green","attendance"], urgent:["red","warning"], homework:["green","assignment"] };
+let pushTimer;
+function pushToast(n){ const [c,i]=PUSH_STYLE[n.type]||PUSH_STYLE.update; const el=$("#push"); el.innerHTML=`<div class="push" role="status"><div class="ic ${c}">${ic(i)}</div><div class="grow"><small>${esc(SCHOOL.name)} · now</small><b>${esc(n.title)}</b><span>${esc(n.body)}</span></div><button class="icon-btn" data-act="dismissPush" aria-label="Dismiss">${ic("close","sm")}</button></div>`; clearTimeout(pushTimer); pushTimer=setTimeout(()=>el.innerHTML="",5500); }
+
+/* ===== Bus simulation ===== */
+const ROUTE_PATHS = {
+  R12:"M30,220 C70,190 60,140 110,130 S180,160 210,110 S300,60 340,80 S380,40 380,40",
+  R7:"M40,60 C90,40 120,120 180,110 S260,180 320,150 S380,60 380,60",
+  R3:"M40,200 C120,190 150,90 220,90 S330,150 380,60",
+  R19:"M30,80 C80,120 120,60 190,100 S280,220 380,140",
+  R5:"M40,120 C150,60 250,190 380,120"
+};
+setInterval(()=>{
+  let changed=false;
+  BUSES.forEach(b=>{ if(b.status==="moving"){ const s=state.bus[b.id]; s.progress=Math.min(1,s.progress+0.0018); if(s.progress>=1){ b.status="arrived"; changed=true; } } });
+  if(state.user && (state.route==="transport" || (state.route==="home"&&state.user.role==="student"))){ if(changed) render(); else updateBusDOM(); }
+},1000);
+function busPoint(id, progress){ const p=$(`#path-${id}`); if(!p) return null; const L=p.getTotalLength(); return p.getPointAtLength(L*progress); }
+function busStopIndex(b){ const p=state.bus[b.id].progress; const n=b.stops.length-1; return Math.min(n, Math.floor(p*n+1e-9)); }
+function busEta(b){ const p=state.bus[b.id].progress; const n=b.stops.length-1; if(p>=1||b.status!=="moving") return null; const idx=Math.floor(p*n); const frac=p*n-idx; const remainingLegs=(n-idx-frac); return Math.max(1,Math.round(remainingLegs*7)); }
+function updateBusDOM(){
+  BUSES.filter(b=>b.status==="moving").forEach(b=>{ const pt=busPoint(b.id,state.bus[b.id].progress); const m=$(`#bus-${b.id}`); if(pt&&m){ m.setAttribute("transform",`translate(${pt.x},${pt.y})`);} const e=document.querySelector(`[data-eta="${b.id}"]`); if(e){ const eta=busEta(b); e.textContent = eta ? `${eta} min` : "Arrived"; } });
+}
+function busMapSVG(b, opts={}){
+  const s=state.bus[b.id]; const n=b.stops.length-1;
+  // compute stop points on the path once rendered: place markers using a temp path via a hidden svg
+  const tmp=document.createElementNS("http://www.w3.org/2000/svg","svg"); const p=document.createElementNS("http://www.w3.org/2000/svg","path"); p.setAttribute("d",ROUTE_PATHS[b.id]); tmp.appendChild(p); document.body.appendChild(tmp); const L=p.getTotalLength();
+  const pts=b.stops.map((st,i)=>p.getPointAtLength(L*i/n)); const cur=p.getPointAtLength(L*s.progress); document.body.removeChild(tmp);
+  const homeIdx = opts.homeStop ?? -1;
+  const stopsSvg = pts.map((pt,i)=>{ const done=(s.progress*n)>=i-1e-9; const isSchool=i===n; const isHome=i===homeIdx;
+    return `<g transform="translate(${pt.x},${pt.y})">${isHome?`<circle r="14" fill="#0F9D93" opacity=".18"/>`:""}<circle r="${isSchool?9:6}" fill="${isSchool?"#0F1F3D":done?"#12A150":"#fff"}" stroke="${done?"#12A150":"#8A94AB"}" stroke-width="2.5"/>${isSchool?`<text y="-16" text-anchor="middle" font-size="11" font-weight="600" fill="#0F1F3D">School</text>`:""}${isHome?`<text y="-14" text-anchor="middle" font-size="11" font-weight="600" fill="#0A6F68">Your stop</text>`:""}</g>`; }).join("");
+  const status = b.status==="moving"?"Moving":b.status==="arrived"?"Arrived at school":b.status==="needs-driver"?"No driver assigned":"In maintenance";
+  return `<div class="map"><svg viewBox="0 0 420 260" role="img" aria-label="Live map of ${esc(b.route)}">
+    <defs><pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#D9E3D9" stroke-width="1"/></pattern></defs>
+    <rect width="420" height="260" fill="url(#grid)"/>
+    <path d="M0,150 Q100,140 210,160 T420,140" stroke="#CBD6E4" stroke-width="10" fill="none" opacity=".7"/><path d="M0,150 Q100,140 210,160 T420,140" stroke="#fff" stroke-width="2" stroke-dasharray="8 8" fill="none"/>
+    <path d="M120,0 Q140,120 100,260" stroke="#CBD6E4" stroke-width="8" fill="none" opacity=".7"/>
+    <path d="M60,40 h50 v30 h-50z M300,190 h70 v40 h-70z M240,20 h40 v25 h-40z M20,230 h60 v20 h-60z" fill="#DFE8DF"/>
+    <path id="path-${b.id}" d="${ROUTE_PATHS[b.id]}" fill="none" stroke="#1F5AF6" stroke-width="4" stroke-linecap="round" opacity=".9"/>
+    ${stopsSvg}
+    <g id="bus-${b.id}" transform="translate(${cur.x},${cur.y})">${b.status==="moving"?`<circle r="18" fill="#1F5AF6" opacity=".15"><animate attributeName="r" values="14;24;14" dur="2s" repeatCount="indefinite"/></circle>`:""}<circle r="13" fill="${b.status==="moving"||b.status==="arrived"?"#1F5AF6":"#8A94AB"}"/><svg x="-8" y="-8" width="16" height="16" viewBox="0 0 24 24"><path fill="#fff" d="${ICON_PATHS.bus}"/></svg></g>
+  </svg><div class="status"><span class="live">${b.status==="moving"?"<i></i>":""}${status}</span>${b.delay?`<span class="live" style="color:#9A4D05">+${b.delay} min late</span>`:""}</div></div>`;
+}
+function busStopsList(b, homeStop=-1){
+  const idx=busStopIndex(b); const s=state.bus[b.id]; const n=b.stops.length-1; const eta=busEta(b);
+  return `<div class="stops">${b.stops.map((st,i)=>{ const done = s.progress*n >= i; const next = !done && i===Math.floor(s.progress*n)+1 && b.status==="moving"; const legs=i-s.progress*n; const et = done?"Passed": b.status!=="moving"? (b.status==="arrived"?"":"—") : `${Math.max(1,Math.round(legs*7))} min`;
+    return `<div class="stop ${done?"done":""} ${next?"next":""}"><div class="ln"><i></i></div><div class="tx"><b>${esc(st.n)}${i===homeStop?' <span class="tag teal">Your stop</span>':""}</b><span>Scheduled ${ampm(st.t)}${b.delay?` · now ~${ampm(addMin(st.t,b.delay))}`:""}</span></div><span class="eta" ${next?`data-eta="${b.id}"`:""}>${et}</span></div>`; }).join("")}</div>`;
+}
+function addMin(t,m){ let [h,mi]=t.split(":").map(Number); mi+=m; h+=Math.floor(mi/60); mi%=60; return `${h}:${pad(mi)}`; }
+
+/* ===== Shared UI bits ===== */
+const avatar = (u, size=36) => `<span class="avatar" style="background:${u.color};width:${size}px;height:${size}px;font-size:${Math.round(size*.36)}px">${u.initials}</span>`;
+function kpi(label, val, sub, color="", icon=""){ return `<div class="kpi"><div class="lab">${icon?ic(icon,"sm"):""}${esc(label)}</div><div class="val ${color}">${val}</div><div class="sub">${esc(sub)}</div></div>`; }
+function tile(route, label, sub, icon, color, params={}){ return `<button class="tile" data-act="go" data-route="${route}" data-params='${JSON.stringify(params)}'><div class="ic ${color}">${ic(icon)}</div><div><b>${esc(label)}</b><br><span>${esc(sub)}</span></div></button>`; }
+function noticeItem(n, opts={}){
+  const u=state.user; const unread = u.role==="student" && !READ_BY_STUDENT.has(n.id);
+  const col = n.priority==="urgent" ? "red" : (CAT_COLOR[n.category]||"blue");
+  const stats = u.role!=="student" ? `<span class="tiny">${n.status==="scheduled"?`Scheduled ${fmtD(n.when)} ${fmtT(n.when)}`:`${n.read}/${n.delivered} read · ${targetLabel(n.target)}`}</span>` : "";
+  return `<button class="item click ${unread?"unread":""}" data-act="openNotice" data-id="${n.id}"><div class="ic ${col}">${ic(CAT_ICON[n.category]||"campaign")}</div><div class="tx"><b class="ellipsis">${esc(n.title)}</b><span>${esc(n.author)} · ${rel(n.when)} ${n.priority==="urgent"?'<span class="tag red">Urgent</span>':""} ${n.status==="scheduled"?'<span class="tag grey">Scheduled</span>':""}</span>${opts.desc?`<div class="desc">${esc(n.body)}</div>`:""}${stats}</div>${ic("chevron")}</button>`;
+}
+function emptyState(icon, title, sub, color="grey"){ return `<div class="empty"><div class="ic ${color}">${ic(icon,"lg")}</div><b>${esc(title)}</b><span class="small">${esc(sub)}</span></div>`; }
+
+/* ===== Pages ===== */
+const PAGES = {};
+
+PAGES.home = () => ({ admin: adminHome, teacher: teacherHome, student: studentHome })[state.user.role]();
+
+function adminHome(){
+  const pending = PENDING_TEACHER_ACTIONS.length; const maxV=100;
+  const fleetMoving = BUSES.filter(b=>b.status==="moving").length;
+  return `<div class="page-h"><h1>Good morning, David</h1><p>${fmtD(TODAY,{year:true})} · ${SCHOOL.term}, week 10 · Term ends ${SCHOOL.termEnds}</p></div>
+  <div class="grid g4">
+    ${kpi("Students","2,840","Active enrolments","", "group")}
+    ${kpi("Attendance today","94.6%","2,687 marked present","green","attendance")}
+    ${kpi("Bus fleet",`${FLEET_OPERATIONAL} / ${FLEET_TOTAL}`,`${fleetMoving} on the road now`,"blue","bus")}
+    ${kpi("Notices this month","48","3 scheduled","", "campaign")}
+  </div>
+  <div class="cols mt">
+    <div class="stack">
+      <div class="card"><div class="card-h"><h3>Attendance trend</h3><span class="tiny">Last 7 school days</span></div>
+        <div class="bar-chart">${ATTENDANCE_TREND.map(t=>`<div class="b"><span class="tiny">${t.v}%</span><i class="${t.v<93?"low":""}" style="height:${(t.v-85)/(100-85)*100}%"></i><span>${t.d}</span></div>`).join("")}</div>
+      </div>
+      <div class="card"><div class="card-h"><h3>Pending teacher actions</h3><span class="tag orange">${pending} open</span></div>
+        <div class="list">${PENDING_TEACHER_ACTIONS.map(a=>`<div class="item"><div class="ic orange">${ic("warning")}</div><div class="tx"><b>${esc(a.what)}</b><span>${esc(a.cls)} · ${esc(a.teacher)}</span></div><button class="btn sm tonal" data-act="nudge" data-who="${esc(a.teacher)}">Send reminder</button></div>`).join("")}</div>
+      </div>
+      <div class="card"><div class="card-h"><h3>Latest announcements</h3><button class="link" data-act="go" data-route="updates">See all</button></div>
+        <div class="list">${NOTICES.filter(n=>n.status==="published").slice(0,4).map(n=>noticeItem(n)).join("")}</div>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="card"><div class="card-h"><h3>Quick actions</h3></div>
+        <div class="grid g2">${tile("compose","New broadcast","Target by year, class or route","campaign","blue")}${tile("transport","Fleet status",`${fleetMoving} moving · 1 needs driver`,"bus","orange",{id:"R19"})}${tile("reports","Reports","Attendance, delivery, exports","chart","teal")}${tile("calendar","Calendar","Add holiday or event","calendar","purple")}</div>
+      </div>
+      <div class="card"><div class="card-h"><h3>Bus fleet status</h3><button class="link" data-act="go" data-route="transport">Open</button></div>
+        <div class="list">${BUSES.map(b=>busRow(b)).join("")}</div>
+      </div>
+      <div class="card"><div class="card-h"><h3>Recent activity</h3><button class="link" data-act="go" data-route="activity">History</button></div>
+        <div class="list">${ACTIVITY.slice(0,3).map(a=>`<div class="item"><div class="ic grey">${ic("history")}</div><div class="tx"><b class="small">${esc(a.what)}</b><span>${esc(a.who)} · ${rel(a.when)}</span></div></div>`).join("")}</div>
+      </div>
+    </div>
+  </div>`;
+}
+function busRow(b){ const st={moving:["green","Moving"],arrived:["blue","Arrived"],"needs-driver":["orange","Needs driver"],maintenance:["grey","Maintenance"]}[b.status]; const eta=busEta(b);
+  return `<button class="item click" data-act="go" data-route="transport" data-params='{"id":"${b.id}"}'><div class="ic ${st[0]}">${ic("bus")}</div><div class="tx"><b>${esc(b.route)} · ${esc(b.name)}</b><span>${esc(b.driver)} · ${b.riders} riders${eta?` · ETA ${eta} min`:""}</span></div><span class="tag ${st[0]}">${st[1]}</span></button>`; }
+
+function teacherHome(){
+  const tt = TEACHER_TIMETABLE.Mon; const done = Object.keys(state.attSubmitted);
+  const unreadMsgs = MESSAGES.filter(m=>m.to==="teacher"&&!m.read).length;
+  return `<div class="greet teacher"><h2>Good morning, Sarah</h2><p>${fmtD(TODAY)} · 6 periods today · Homeroom 8A roll ${done.includes("8A")?"marked ✓":"opens 8:50 am"}</p><div class="row"><span class="pill">${ic("school","sm")} 3 classes</span><span class="pill">${ic("chat","sm")} ${unreadMsgs} new messages</span><span class="pill">${ic("quiz","sm")} Exam supervision Wed</span></div></div>
+  <div class="grid g4 mt">${kpi("Today's classes","6","Periods 1–6","", "timetable")}${kpi("Rolls to mark",`${Math.max(0,3-done.length)}`,done.length?`${done.length} submitted`:"8A · 9A · 8B","orange","attendance")}${kpi("Messages",`${unreadMsgs}`,"Unread","purple","chat")}${kpi("Assignments due","3","This week across classes","teal","assignment")}</div>
+  <div class="cols mt"><div class="stack">
+    <div class="card"><div class="card-h"><h3>Today</h3><button class="link" data-act="go" data-route="timetable">Full timetable</button></div>
+      <div class="timeline">${tt.map(x=>{ const now=x.p===2; const per=PERIODS.filter(p=>typeof p.p==="number").find(p=>p.p===x.p);
+        return `<div class="tl"><div class="t">${ampm(per.t)}</div><div class="b ${now?"now":""}"><div class="between"><div><b>${esc(x.sub)}${x.cls?` · ${x.cls}`:""}</b><span>Room ${esc(x.room)}${now?" · In progress":""}</span></div>${x.cls&&x.sub!=="Homeroom"?`<button class="btn sm ${state.attSubmitted[x.cls]?"outline":"tonal"}" data-act="go" data-route="classDetail" data-params='{"cls":"${x.cls}","tab":"attendance"}'>${state.attSubmitted[x.cls]?"Roll marked":"Mark roll"}</button>`:""}</div></div></div>`; }).join("")}</div>
+    </div>
+    <div class="card"><div class="card-h"><h3>Latest updates for your classes</h3><button class="link" data-act="go" data-route="updates">See all</button></div><div class="list">${NOTICES.filter(n=>n.status==="published").slice(0,3).map(n=>noticeItem(n)).join("")}</div></div>
+  </div><div class="stack">
+    <div class="card"><div class="card-h"><h3>Quick actions</h3></div><div class="grid g2">${tile("compose","Post class update","Homework, reminders, notices","campaign","green")}${tile("classDetail","Take attendance","8A · Period 2","attendance","blue",{cls:"8A",tab:"attendance"})}${tile("compose","Share assignment","Attach and set a due date","assignment","teal",{kind:"assignment"})}${tile("messages","Messages",`${unreadMsgs} unread`,"chat","purple")}</div></div>
+    <div class="card"><div class="card-h"><h3>My classes</h3></div><div class="list">${state.user.classes.map(c=>{ const r=ROSTERS[c]; const avg=Math.round(r.reduce((a,s)=>a+s.att,0)/r.length);
+      return `<button class="item click" data-act="go" data-route="classDetail" data-params='{"cls":"${c}"}'><div class="ic ${c===state.user.homeroom?"green":"blue"}">${ic("school")}</div><div class="tx"><b>${c} Mathematics${c===state.user.homeroom?" · Homeroom":""}</b><span>${r.length} students · ${avg}% attendance</span></div>${ic("chevron")}</button>`; }).join("")}</div></div>
+    <div class="card"><div class="card-h"><h3>Messages</h3><button class="link" data-act="go" data-route="messages">Inbox</button></div><div class="list">${MESSAGES.filter(m=>m.to==="teacher").slice(0,2).map(msgItem).join("")}</div></div>
+  </div></div>`;
+}
+
+function studentHome(){
+  const u=state.user; const b=BUSES.find(x=>x.id===u.route); const eta=busEta(b);
+  const feed = NOTICES.filter(n=>noticeVisibleTo(n,u)); const newN = feed.filter(n=>!READ_BY_STUDENT.has(n.id)).length;
+  const dueSoon = ASSIGNMENTS.filter(a=>a.cls===u.section&&a.status==="todo").length;
+  const tt = TIMETABLE_8A.Mon;
+  return `<div class="greet student"><h2>Hi Mia 👋</h2><p>${fmtD(TODAY)} · Week 10 · Maths exam today at 9:00 am in School Hall</p><div class="row"><span class="pill">${ic("bus","sm")} Route 12 · ${b.status==="moving"?`${eta} min away`:"Arrived"}</span><span class="pill">${ic("campaign","sm")} ${newN} new updates</span><span class="pill">${ic("assignment","sm")} ${dueSoon} due this week</span></div></div>
+  <div class="grid g4 mt">${kpi("Today's classes","6","Maths exam period 1–2","", "timetable")}${kpi("Attendance","96%","This term","green","attendance")}${kpi("Assignments",`${dueSoon}`,"To do","orange","assignment")}${kpi("Events","2","This week","teal","star")}</div>
+  <div class="cols mt"><div class="stack">
+    <div class="card"><div class="card-h"><h3>My bus · Route 12</h3><button class="link" data-act="go" data-route="transport">Track live</button></div>
+      ${busMapSVG(b,{homeStop:3})}
+      <div class="between mt-s"><div><b>${b.status==="moving"?"On its way to school":"Arrived at school"}</b><br><span class="small muted">Driver ${esc(b.driver)} · ${b.rego}${b.delay?` · running ${b.delay} min late`:""}</span></div><div class="right"><span class="big-num" style="font-size:26px" ${b.status==="moving"?`data-eta="${b.id}"`:""}>${b.status==="moving"?`${eta} min`:"Arrived"}</span><br><span class="tiny">to school</span></div></div>
+    </div>
+    <div class="card"><div class="card-h"><h3>Today's timetable</h3><button class="link" data-act="go" data-route="timetable">Week view</button></div>
+      <div class="timeline">${tt.slice(0,4).map((s,i)=>{ const per=PERIODS.filter(p=>typeof p.p==="number")[i]; const isExam=i<2; return `<div class="tl"><div class="t">${ampm(per.t)}</div><div class="b ${i===0?"now":""}"><b>${isExam?"Mathematics exam":esc(s)}</b><span>${isExam?"School Hall · Bring calculator":`${esc(TEACHERS_BY_SUBJECT[s])} · Room ${esc(ROOMS[s])}`}</span></div></div>`; }).join("")}<button class="btn text" data-act="go" data-route="timetable">Show all 6 periods ${ic("chevron","sm")}</button></div>
+    </div>
+  </div><div class="stack">
+    <div class="card"><div class="card-h"><h3>New updates</h3><button class="link" data-act="go" data-route="updates">All updates</button></div><div class="list">${feed.slice(0,4).map(n=>noticeItem(n)).join("")}</div></div>
+    <div class="card"><div class="card-h"><h3>Due soon</h3><button class="link" data-act="go" data-route="assignments">All</button></div><div class="list">${ASSIGNMENTS.filter(a=>a.cls===u.section&&a.status==="todo").slice(0,3).map(assignItem).join("")}</div></div>
+    <div class="card"><div class="card-h"><h3>Coming up</h3><button class="link" data-act="go" data-route="calendar">Calendar</button></div><div class="list">${CAL.filter(e=>e.d>=isoToday()).sort((a,b)=>a.d.localeCompare(b.d)).slice(0,4).map(calItem).join("")}</div></div>
+  </div></div>`;
+}
+function calItem(e){ const col={event:"teal",holiday:"orange",exam:"red"}[e.type]; const icn={event:"star",holiday:"sun",exam:"quiz"}[e.type]; return `<div class="item"><div class="ic ${col}">${ic(icn)}</div><div class="tx"><b>${esc(e.title)}</b><span>${fmtD(e.d)}</span></div></div>`; }
+function assignItem(a){ const col=SUBJECT_COLORS[a.subject]||"blue"; const st={todo:["orange","Due "+fmtD(a.due)],submitted:["blue","Submitted"],marked:["green",`Marked · ${a.grade}`]}[a.status];
+  return `<button class="item click" data-act="openAssign" data-id="${a.id}"><div class="ic ${col}">${ic("assignment")}</div><div class="tx"><b class="ellipsis">${esc(a.title)}</b><span>${esc(a.subject)} · ${esc(a.teacher)}${state.user.role==="teacher"?` · ${a.cls}`:""}</span></div><span class="tag ${st[0]}">${st[1]}</span></button>`; }
+function msgItem(m){ return `<button class="item click ${!m.read?"unread":""}" data-act="openMsg" data-id="${m.id}"><div class="ic purple">${ic("chat")}</div><div class="tx"><b class="ellipsis">${esc(m.subject)}</b><span class="ellipsis">${esc(m.from)} · ${rel(m.when)}</span><div class="desc">${esc(m.text)}</div></div>${ic("chevron")}</button>`; }
+
+/* --- Updates feed --- */
+PAGES.updates = () => {
+  const u=state.user; let list = NOTICES.filter(n=>noticeVisibleTo(n,u));
+  if(u.role==="teacher" && state.updatesFilter==="mine") list=list.filter(n=>n.author===u.name);
+  if(state.updatesFilter==="urgent") list=list.filter(n=>n.priority==="urgent");
+  if(state.updatesFilter==="scheduled") list=list.filter(n=>n.status==="scheduled");
+  if(["Homework","Exam","Transport","Event"].includes(state.updatesFilter)) list=list.filter(n=>n.category===state.updatesFilter);
+  list=[...list].sort((a,b)=>b.when.localeCompare(a.when));
+  const filters = u.role==="student" ? ["all","Homework","Exam","Transport","Event"] : u.role==="teacher" ? ["all","mine","urgent","scheduled","Homework"] : ["all","urgent","scheduled","Exam","Transport","Event"];
+  const lab = f=>({all:"All",mine:"Posted by me",urgent:"Urgent",scheduled:"Scheduled"}[f]||f);
+  return `<div class="page-h between"><div><h1>School updates</h1><p>${u.role==="student"?"Announcements, homework and alerts for you":"Announcements, circulars and targeted broadcasts"}</p></div>${u.role!=="student"?`<button class="btn" data-act="go" data-route="compose">${ic("add","sm")} New</button>`:""}</div>
+  <div class="chip-row mb">${filters.map(f=>`<button class="chip ${state.updatesFilter===f?"on":""}" data-act="filterUpdates" data-f="${f}">${lab(f)}</button>`).join("")}</div>
+  <div class="card">${list.length?`<div class="list">${list.map(n=>noticeItem(n,{desc:true})).join("")}</div>`:emptyState("campaign","Nothing here yet","Try another filter or check back later.")}</div>`;
+};
+
+/* --- Compose broadcast (full page on mobile) --- */
+PAGES.compose = () => {
+  const u=state.user; const d=state.params; const kind=d.kind||"broadcast";
+  const targets = u.role==="admin" ? [["school","Whole school"],["year","Year level"],["class","Class"],["route","Bus route"]] : [["class","My class"],["year","Year level"]];
+  const level = d.level || (u.role==="admin"?"school":"class");
+  const yearSel = `<select id="c-year">${YEARS.map(y=>`<option ${y===8?"selected":""}>${y}</option>`).join("")}</select>`;
+  const classSel = `<select id="c-class">${(u.role==="admin"?SECTIONS:u.classes).map(c=>`<option ${c===d.cls?"selected":""}>${c}</option>`).join("")}</select>`;
+  const routeSel = `<select id="c-route">${BUSES.map(b=>`<option value="${b.id}">${b.route} · ${esc(b.name)}</option>`).join("")}</select>`;
+  const reach = {school:"3,026 people",year:"452 students",class:"26 students",route:"41 riders"}[level];
+  return `<div class="page-h row"><button class="icon-btn" data-act="back" aria-label="Back">${ic("back")}</button><div><h1>${kind==="assignment"?"Share assignment":u.role==="admin"?"New broadcast":"Post class update"}</h1><p>Create → target → publish → track</p></div></div>
+  <div class="cols-eq"><div class="card stack">
+    <div class="field"><label>Title</label><input id="c-title" placeholder="${kind==="assignment"?"e.g. Chapter 8 exercises":"e.g. School closes at 1:00 pm today due to weather"}" value="${esc(d.title||"")}"></div>
+    <div class="field"><label>Message</label><textarea id="c-body" placeholder="Write the update in plain language. Say what happens, when, and what people need to do.">${esc(d.body||"")}</textarea></div>
+    <div class="two-col">
+      <div class="field"><label>Category</label><select id="c-cat">${(kind==="assignment"?["Homework"]:u.role==="admin"?["Announcement","Circular","Event","Holiday","Exam","Transport"]:["Homework","Circular","Announcement","Event"]).map(c=>`<option ${c===d.category?"selected":""}>${c}</option>`).join("")}</select></div>
+      <div class="field"><label>${kind==="assignment"?"Due date":"Attachment"}</label>${kind==="assignment"?`<input id="c-due" type="date" value="2026-09-18">`:`<button class="btn outline" style="justify-content:flex-start" data-act="attach">${ic("attach","sm")} <span id="c-attach">Add file</span></button>`}</div>
+    </div>
+  </div><div class="stack">
+    <div class="card stack">
+      <div class="field"><label>Send to</label><div class="seg">${targets.map(t=>`<button class="${level===t[0]?"on":""}" data-act="setLevel" data-level="${t[0]}">${t[1]}</button>`).join("")}</div></div>
+      ${level==="year"?`<div class="field"><label>Year level</label>${yearSel}</div>`:level==="class"?`<div class="field"><label>Class</label>${classSel}</div>`:level==="route"?`<div class="field"><label>Route</label>${routeSel}</div>`:""}
+      <div class="hint">${ic("info","sm")}<span>Reaches about <b>${reach}</b>. ${level==="school"?"Use whole-school only for information everyone needs.":"Targeted updates keep the feed relevant."}</span></div>
+      <div class="field"><label>Priority</label><div class="seg"><button class="${(d.priority||"normal")==="normal"?"on":""}" data-act="setPri" data-p="normal">Normal</button><button class="${d.priority==="urgent"?"on":""}" data-act="setPri" data-p="urgent">Urgent</button></div><span class="help">Urgent updates bypass quiet hours and pin to the top of the feed.</span></div>
+      <div class="switch"><div><b>Send push notification</b><br><span class="tiny">Deliver to phones immediately on publish</span></div><button class="tg ${d.push===false?"":"on"}" data-act="togglePush" aria-label="Toggle push"></button></div>
+      <div class="field"><label>When</label><div class="seg"><button class="${!d.schedule?"on":""}" data-act="setWhen" data-w="now">Publish now</button><button class="${d.schedule?"on":""}" data-act="setWhen" data-w="later">Schedule</button></div></div>
+      ${d.schedule?`<div class="two-col"><div class="field"><label>Date</label><input id="c-date" type="date" value="2026-09-15"></div><div class="field"><label>Time</label><input id="c-time" type="time" value="08:00"></div></div>`:""}
+    </div>
+    <div class="row"><button class="btn block" data-act="publish">${ic("send","sm")} ${d.schedule?"Schedule":"Publish"}</button><button class="btn outline" data-act="back">Cancel</button></div>
+  </div></div>`;
+};
+
+/* --- Calendar --- */
+PAGES.calendar = () => {
+  const m=state.calMonth; const y=m.getFullYear(), mo=m.getMonth(); const first=new Date(y,mo,1); const startDow=(first.getDay()+6)%7; const days=new Date(y,mo+1,0).getDate();
+  const cells=[]; for(let i=0;i<startDow;i++) cells.push(""); for(let d=1;d<=days;d++) cells.push(d);
+  const sel = state.calSel; const evs = CAL.filter(e=>e.d===sel); const holidayBreak = d => d>="2026-09-19" && d<="2026-10-04";
+  const monthList = CAL.filter(e=>e.d.startsWith(`${y}-${pad(mo+1)}`)).sort((a,b)=>a.d.localeCompare(b.d));
+  return `<div class="page-h between"><div><h1>Calendar</h1><p>${SCHOOL.term} · Official school calendar</p></div>${state.user.role==="admin"?`<button class="btn" data-act="openSheet" data-kind="addEvent">${ic("add","sm")} Add</button>`:""}</div>
+  <div class="cols-eq"><div class="card">
+    <div class="between mb"><button class="icon-btn" data-act="calNav" data-d="-1" aria-label="Previous month">${ic("back")}</button><h3>${MONTHS[mo]} ${y}</h3><button class="icon-btn" data-act="calNav" data-d="1" aria-label="Next month" style="transform:scaleX(-1)">${ic("back")}</button></div>
+    <div class="cal">${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`<div class="dow">${d}</div>`).join("")}${cells.map((d,i)=>{ if(!d) return `<div class="d pad"></div>`; const iso=`${y}-${pad(mo+1)}-${pad(d)}`; const ev=CAL.filter(e=>e.d===iso); const wk=i%7>=5; const inBreak=holidayBreak(iso)&&!wk;
+      return `<button class="d ${iso===isoToday()?"today":""} ${iso===sel?"sel":""} ${wk?"wk":""}" data-act="calSel" data-d="${iso}" style="${inBreak?"background:#FFF6EC":""}">${d}<span class="dots">${[...new Set(ev.map(e=>e.type))].map(t=>`<i class="dot ${t}"></i>`).join("")}</span></button>`; }).join("")}</div>
+    <div class="legend mt-s"><span><i class="dot event"></i>Academic event</span><span><i class="dot holiday"></i>Holiday</span><span><i class="dot exam"></i>Examination</span><span><i style="background:#FFE2C2"></i>Term break</span></div>
+  </div><div class="stack">
+    <div class="card"><div class="card-h"><h3>${fmtD(sel,{year:true})}</h3>${holidayBreak(sel)?'<span class="tag orange">Term break</span>':""}</div>${evs.length?`<div class="list">${evs.map(calItem).join("")}</div>`:emptyState("calendar","No events this day","Term 3 classes run as usual.")}</div>
+    <div class="card"><div class="card-h"><h3>${MONTHS[mo]} at a glance</h3></div>${monthList.length?`<div class="list">${monthList.map(calItem).join("")}</div>`:emptyState("calendar","Nothing scheduled","")}</div>
+  </div></div>`;
+};
+
+/* --- Exams --- */
+PAGES.exams = () => {
+  const u=state.user; const isAdmin=u.role==="admin"; const year = u.role==="student"?u.year:state.examYear;
+  const list = EXAMS.filter(e=>e.year===year).sort((a,b)=>a.date.localeCompare(b.date));
+  const next = list.find(e=>e.date>=isoToday());
+  return `<div class="page-h between"><div><h1>Examinations</h1><p>${u.role==="student"?"Your Term 3 exam schedule and reminders":"Schedules, changes and section-wise notifications"}</p></div>${isAdmin?`<button class="btn" data-act="openSheet" data-kind="addExam">${ic("add","sm")} Add exam</button>`:""}</div>
+  ${u.role!=="student"?`<div class="chip-row mb">${YEARS.map(y=>`<button class="chip ${y===year?"on":""}" data-act="examYear" data-y="${y}">Year ${y}</button>`).join("")}</div>`:""}
+  ${u.role==="student"&&next?`<div class="card tint mb"><div class="row"><div class="ic red" style="width:48px;height:48px;border-radius:14px;display:grid;place-items:center">${ic("quiz")}</div><div class="grow"><b>Next: ${esc(next.subject)}</b><br><span class="small muted">${fmtD(next.date)} · ${ampm(next.time)} · ${next.dur} min · ${esc(next.venue)}</span></div></div><div class="switch" style="padding-bottom:0"><div><b>Reminders</b><br><span class="tiny">Push alert the evening before and 1 hour before each exam</span></div><button class="tg ${state.reminders?"on":""}" data-act="toggleReminders"></button></div></div>`:""}
+  <div class="card"><div class="card-h"><h3>Year ${year} · Term 3 examinations</h3>${list.length?`<span class="tiny">${list.length} papers</span>`:""}</div>
+  ${list.length?`<div class="table-wrap"><table class="table"><thead><tr><th>Subject</th><th>Date</th><th>Time</th><th>Sections</th><th>Venue</th><th>Status</th>${isAdmin?"<th></th>":""}</tr></thead><tbody>${list.map(e=>`<tr><td><b>${esc(e.subject)}</b><br><span class="tiny">${e.dur} min</span></td><td>${fmtD(e.date)}</td><td>${ampm(e.time)}</td><td>${e.sections}</td><td>${esc(e.venue)}</td><td><span class="tag ${e.status==="published"?"green":e.status==="postponed"?"orange":"grey"}">${e.status[0].toUpperCase()+e.status.slice(1)}</span></td>${isAdmin?`<td class="right"><button class="btn sm tonal" data-act="examAction" data-id="${e.id}">${e.status==="upcoming"?"Publish":"Change"}</button></td>`:""}</tr>`).join("")}</tbody></table></div>`:emptyState("quiz","No exams scheduled",`Year ${year} has no papers in Term 3.`)}</div>
+  ${u.role==="student"?`<div class="section-h"><h2>Exam-day checklist</h2></div><div class="card"><div class="list">${["Arrive 10 minutes before the start time","Bring pens, pencils and an approved calculator","Phones off and in your locker","Water in a clear bottle only"].map(t=>`<div class="item"><div class="ic green">${ic("check")}</div><div class="tx"><b class="small" style="font-weight:500">${t}</b></div></div>`).join("")}</div></div>`:""}`;
+};
+
+/* --- Transport --- */
+PAGES.transport = () => {
+  const u=state.user; const isStudent=u.role==="student";
+  const sel = isStudent ? BUSES.find(b=>b.id===u.route) : (BUSES.find(b=>b.id===(state.params.id||state.transportSel))||BUSES[0]); state.transportSel=sel.id;
+  const eta=busEta(sel); const idx=busStopIndex(sel);
+  const detail = `<div class="card"><div class="between mb"><div><h3>${esc(sel.route)} · ${esc(sel.name)}</h3><span class="small muted">${esc(sel.run)} · ${sel.rego} · ${sel.riders}/${sel.capacity} riders</span></div>${sel.status==="moving"?`<div class="right"><span class="big-num" style="font-size:26px" data-eta="${sel.id}">${eta} min</span><br><span class="tiny">to ${isStudent?"school":"final stop"}</span></div>`:""}</div>
+    ${busMapSVG(sel,{homeStop:isStudent?3:-1})}
+    <div class="grid g3 mt"><div class="kpi" style="min-height:0"><div class="lab">Driver</div><div class="val" style="font-size:16px">${esc(sel.driver)}</div></div><div class="kpi" style="min-height:0"><div class="lab">Next stop</div><div class="val" style="font-size:16px">${sel.status==="moving"?esc(sel.stops[Math.min(sel.stops.length-1,Math.floor(state.bus[sel.id].progress*(sel.stops.length-1))+1)].n):"—"}</div></div><div class="kpi" style="min-height:0"><div class="lab">Stops remaining</div><div class="val" style="font-size:16px">${sel.status==="moving"?sel.stops.length-1-Math.floor(state.bus[sel.id].progress*(sel.stops.length-1)):0}</div></div></div>
+    <div class="section-h" style="margin-top:14px"><h2>Stops</h2></div>${busStopsList(sel,isStudent?3:-1)}
+    ${isStudent?`<div class="row mt"><button class="btn tonal grow" data-act="snack" data-msg="We'll notify you when Route 12 is 5 minutes from your stop.">${ic("bell","sm")} Alert me before my stop</button><button class="btn outline" data-act="snack" data-msg="Message sent to the Transport Office.">${ic("chat","sm")} Contact</button></div>`:`<div class="row mt wrap">${sel.status==="needs-driver"?`<button class="btn grow" data-act="openSheet" data-kind="assignDriver" data-id="${sel.id}">${ic("driver","sm")} Assign driver</button>`:`<button class="btn tonal grow" data-act="openSheet" data-kind="assignDriver" data-id="${sel.id}">${ic("driver","sm")} Change driver</button>`}<button class="btn outline grow" data-act="go" data-route="compose" data-params='{"level":"route","category":"Transport","title":"${esc(sel.route)} update"}'>${ic("campaign","sm")} Notify riders</button>${u.role==="admin"&&sel.status==="maintenance"?`<button class="btn outline" data-act="busBack" data-id="${sel.id}">Return to service</button>`:""}</div>`}
+  </div>`;
+  if(isStudent) return `<div class="page-h"><h1>My bus</h1><p>Live location, ETA and stops for Route 12</p></div>${detail}`;
+  return `<div class="page-h between"><div><h1>Transport</h1><p>${FLEET_OPERATIONAL} of ${FLEET_TOTAL} buses operational · ${BUSES.filter(b=>b.status==="moving").length} moving now</p></div>${u.role==="admin"?`<button class="btn outline" data-act="snack" data-msg="Fleet report exported (CSV).">${ic("download","sm")} Export</button>`:""}</div>
+  <div class="cols" style="grid-template-columns:1fr 1.5fr"><div class="card"><div class="card-h"><h3>Fleet</h3><span class="tiny">Morning run</span></div><div class="list">${BUSES.map(b=>{ const st={moving:["green","Moving"],arrived:["blue","Arrived"],"needs-driver":["orange","Needs driver"],maintenance:["grey","Maintenance"]}[b.status];
+    return `<button class="item click" data-act="selBus" data-id="${b.id}" style="${b.id===sel.id?"background:var(--primary-c)":""}"><div class="ic ${st[0]}">${ic("bus")}</div><div class="tx"><b>${esc(b.route)}</b><span class="ellipsis">${esc(b.name)}</span></div><span class="tag ${st[0]}">${st[1]}</span></button>`; }).join("")}</div></div>${detail}</div>`;
+};
+
+/* --- People (admin) --- */
+PAGES.people = () => {
+  const q=state.peopleQ.toLowerCase(); const tab=state.peopleTab;
+  let body="";
+  if(tab==="students"){ const all=Object.values(ROSTERS).flat().filter(s=>!q||s.name.toLowerCase().includes(q)||s.section.toLowerCase().includes(q));
+    body = all.length?`<div class="table-wrap"><table class="table"><thead><tr><th>Student</th><th>Class</th><th>Attendance</th><th>Bus</th><th></th></tr></thead><tbody>${all.slice(0,40).map(s=>`<tr><td><b>${esc(s.name)}</b><br><span class="tiny">${s.id.startsWith("8A")?"BGS-2024-":"BGS-2023-"}0${(s.id.split("-")[1]||"").padStart(3,"0")}</span></td><td>${s.section}</td><td><div class="row"><div class="progress" style="width:60px"><i class="${s.att>=93?"green":"orange"}" style="width:${s.att}%"></i></div>${s.att}%</div></td><td>${s.name==="Mia Nguyen"?"Route 12":["Route 7","Route 3","—","Route 19"][s.att%4]}</td><td class="right"><button class="btn sm text" data-act="openSheet" data-kind="student" data-id="${s.id}">View</button></td></tr>`).join("")}</tbody></table>${all.length>40?`<p class="tiny center mt-s">Showing 40 of ${all.length}. Refine your search.</p>`:""}</div>`:emptyState("search","No students match","Try a name or class like 8A."); }
+  else if(tab==="staff"){ const staff=Object.entries(TEACHERS_BY_SUBJECT).filter(([s])=>s!=="Homeroom").map(([s,t])=>({n:t,s})).filter(t=>!q||t.n.toLowerCase().includes(q)||t.s.toLowerCase().includes(q));
+    body=`<div class="list">${staff.map(t=>`<div class="item"><div class="ic green">${ic("person")}</div><div class="tx"><b>${esc(t.n)}</b><span>${esc(t.s)} · ${t.n==="Ms Whitfield"?"Homeroom 8A · ":""}Teacher</span></div><span class="tag green">Active</span></div>`).join("")}<div class="item"><div class="ic blue">${ic("person")}</div><div class="tx"><b>David Okafor</b><span>Deputy Principal · Admin</span></div><span class="tag blue">Admin</span></div></div>`; }
+  else { body=`<div class="grid g3">${YEARS.map(y=>`<div class="card tint"><div class="between"><b>Year ${y}</b><span class="tag grey">${y===8?452:y===7?470:y===12?390:440} students</span></div><div class="row mt-s wrap">${["A","B"].map(s=>`<span class="chip">${y}${s}</span>`).join("")}<button class="chip" data-act="snack" data-msg="Add a section to Year ${y} — coming in the next release.">${ic("add","sm")} Section</button></div></div>`).join("")}</div>`; }
+  return `<div class="page-h between"><div><h1>People</h1><p>Students, staff and year-level sections</p></div><button class="btn" data-act="openSheet" data-kind="addStudent">${ic("add","sm")} Add student</button></div>
+  <div class="seg mb" style="max-width:420px"><button class="${tab==="students"?"on":""}" data-act="peopleTab" data-t="students">Students</button><button class="${tab==="staff"?"on":""}" data-act="peopleTab" data-t="staff">Staff</button><button class="${tab==="sections"?"on":""}" data-act="peopleTab" data-t="sections">Sections</button></div>
+  ${tab!=="sections"?`<div class="search-box mb">${ic("search","sm")}<input id="people-q" placeholder="Search by name or class" value="${esc(state.peopleQ)}" data-act="peopleQ"></div>`:""}
+  <div class="card">${body}</div>`;
+};
+
+/* --- Reports (admin) --- */
+PAGES.reports = () => `<div class="page-h between"><div><h1>Reports</h1><p>Attendance, communication delivery and transport</p></div><button class="btn outline" data-act="snack" data-msg="Term 3 summary exported as PDF.">${ic("download","sm")} Export all</button></div>
+  <div class="cols-eq"><div class="card"><div class="card-h"><h3>Attendance by year level</h3><span class="tiny">Term 3 to date</span></div><div class="stack">${[[7,96.2],[8,95.1],[9,93.4],[10,92.8],[11,94.0],[12,95.7]].map(([y,v])=>`<div><div class="between small"><span>Year ${y}</span><b>${v}%</b></div><div class="progress mt-s"><i class="${v<93?"orange":"green"}" style="width:${v}%"></i></div></div>`).join("")}</div><button class="btn text mt" data-act="snack" data-msg="Attendance report exported (XLSX).">${ic("download","sm")} Export attendance</button></div>
+  <div class="stack"><div class="card"><div class="card-h"><h3>Message delivery this month</h3></div><div class="grid g3">${kpi("Sent","48","Broadcasts","","campaign")}${kpi("Delivered","99.1%","Push + in-app","green","doneall")}${kpi("Read","81%","Within 24 h","blue","eye")}</div><div class="list mt-s">${NOTICES.filter(n=>n.status==="published").slice(0,4).map(n=>`<div class="item"><div class="tx"><b class="small ellipsis">${esc(n.title)}</b><span>${targetLabel(n.target)} · ${n.recipients} recipients</span></div><div class="right"><b class="small">${Math.round(n.read/n.delivered*100)}%</b><br><span class="tiny">read</span></div></div>`).join("")}</div></div>
+  <div class="card"><div class="card-h"><h3>Transport</h3></div><div class="grid g3">${kpi("On-time","91%","Morning runs","green","clock")}${kpi("Avg delay","4 min","When late","orange","bus")}${kpi("Utilisation","78%","Seats used","","group")}</div></div></div></div>`;
+
+PAGES.activity = () => `<div class="page-h"><h1>Activity history</h1><p>Who did what, and when — across roles</p></div><div class="card"><div class="list">${ACTIVITY.map(a=>`<div class="item"><div class="ic grey">${ic("history")}</div><div class="tx"><b class="small" style="font-weight:500">${esc(a.what)}</b><span>${esc(a.who)} · ${fmtD(a.when)} ${fmtT(a.when)}</span></div></div>`).join("")}</div></div>`;
+
+/* --- Teacher classes --- */
+PAGES.classes = () => `<div class="page-h"><h1>My classes</h1><p>Attendance, updates and assignments for each class</p></div><div class="grid g3">${state.user.classes.map(c=>{ const r=ROSTERS[c]; const avg=Math.round(r.reduce((a,s)=>a+s.att,0)/r.length); const done=!!state.attSubmitted[c];
+  return `<button class="tile" data-act="go" data-route="classDetail" data-params='{"cls":"${c}"}'><div class="between"><div class="ic ${c===state.user.homeroom?"green":"blue"}">${ic("school")}</div><span class="tag ${done?"green":"orange"}">${done?"Roll marked":"Roll pending"}</span></div><div><b>${c} Mathematics</b><br><span>${r.length} students · ${avg}% attendance${c===state.user.homeroom?" · Homeroom":""}</span></div></button>`; }).join("")}</div>`;
+
+PAGES.classDetail = () => {
+  const cls=state.params.cls||"8A"; const tab=state.params.tab||"attendance"; const roster=ROSTERS[cls]; const draft=state.attDraft[cls]||{}; const submitted=state.attSubmitted[cls];
+  const counts={P:0,A:0,L:0}; roster.forEach(s=>{ const v=draft[s.id]||"P"; counts[v]++; });
+  const tabs=[["attendance","Attendance"],["updates","Updates"],["assignments","Assignments"],["students","Students"]];
+  let body="";
+  if(tab==="attendance"){
+    body = `<div class="card"><div class="between mb wrap"><div><h3>Period 2 · Mathematics · ${fmtD(TODAY)}</h3><span class="small muted">${submitted?`Submitted ${submitted}`:"Everyone is marked present by default — tap to change."}</span></div><div class="row"><span class="tag green">${counts.P} present</span><span class="tag red">${counts.A} absent</span><span class="tag orange">${counts.L} late</span></div></div>
+      ${roster.map(s=>{ const v=draft[s.id]||"P"; return `<div class="att-row"><div class="nm"><b>${esc(s.name)}</b><span>${s.att}% this term${s.name==="Mia Nguyen"?" · Bus Route 12 (running late)":""}</span></div><div class="att-btns">${["P","A","L"].map(k=>`<button class="${k} ${v===k?"on":""}" data-act="att" data-cls="${cls}" data-id="${s.id}" data-v="${k}" aria-label="${{P:"Present",A:"Absent",L:"Late"}[k]}">${{P:"Present",A:"Absent",L:"Late"}[k]}</button>`).join("")}</div></div>`; }).join("")}
+      <div class="row mt"><button class="btn block" data-act="submitAtt" data-cls="${cls}">${ic("check","sm")} ${submitted?"Update roll":"Submit roll"}</button></div></div>`;
+  } else if(tab==="updates"){ const list=NOTICES.filter(n=>n.target.level==="class"&&n.target.value===cls).sort((a,b)=>b.when.localeCompare(a.when));
+    body=`<div class="card">${list.length?`<div class="list">${list.map(n=>noticeItem(n,{desc:true})).join("")}</div>`:emptyState("campaign","No class updates yet","Post homework, reminders or notices to this class.")}<button class="btn tonal mt" data-act="go" data-route="compose" data-params='{"level":"class","cls":"${cls}"}'>${ic("add","sm")} Post update to ${cls}</button></div>`; }
+  else if(tab==="assignments"){ const list=ASSIGNMENTS.filter(a=>a.cls===cls&&a.subject==="Mathematics");
+    body=`<div class="card">${list.length?`<div class="list">${list.map(a=>`<div class="item"><div class="ic blue">${ic("assignment")}</div><div class="tx"><b>${esc(a.title)}</b><span>Due ${fmtD(a.due)} · ${cls==="8A"?"18 of 26":"9 of 25"} submitted</span></div><button class="btn sm text" data-act="snack" data-msg="Submissions view — coming in the next release.">Submissions</button></div>`).join("")}</div>`:emptyState("assignment","No assignments","Share the first assignment for this class.")}<button class="btn tonal mt" data-act="go" data-route="compose" data-params='{"kind":"assignment","level":"class","cls":"${cls}"}'>${ic("add","sm")} Share assignment</button></div>`; }
+  else { body=`<div class="card"><div class="list">${roster.map(s=>`<button class="item click" data-act="openSheet" data-kind="student" data-id="${s.id}"><div class="ic ${s.att>=93?"green":"orange"}">${ic("person")}</div><div class="tx"><b>${esc(s.name)}</b><span>${s.att}% attendance</span></div>${ic("chevron")}</button>`).join("")}</div></div>`; }
+  return `<div class="page-h row"><button class="icon-btn" data-act="go" data-route="classes" aria-label="Back">${ic("back")}</button><div><h1>${cls} Mathematics</h1><p>${roster.length} students · Room B12</p></div></div>
+  <div class="chip-row mb">${tabs.map(t=>`<button class="chip ${tab===t[0]?"on":""}" data-act="go" data-route="classDetail" data-params='{"cls":"${cls}","tab":"${t[0]}"}'>${t[1]}</button>`).join("")}</div>${body}`;
+};
+
+/* --- Timetable --- */
+PAGES.timetable = () => {
+  const u=state.user; const days=["Mon","Tue","Wed","Thu","Fri"]; const day=state.params.day||"Mon"; const pers=PERIODS;
+  if(u.role==="teacher"){ const tt=TEACHER_TIMETABLE.Mon; return `<div class="page-h"><h1>Timetable</h1><p>Week 10 · Monday shown (other days follow the same structure in this demo)</p></div><div class="card"><div class="timeline">${tt.map(x=>{ const per=PERIODS.filter(p=>typeof p.p==="number").find(p=>p.p===x.p); return `<div class="tl"><div class="t">${ampm(per.t)}</div><div class="b"><b>Period ${x.p} · ${esc(x.sub)}${x.cls?` · ${x.cls}`:""}</b><span>Room ${esc(x.room)}</span></div></div>`; }).join("")}</div></div>`; }
+  const subs=TIMETABLE_8A[day]; let pi=0;
+  return `<div class="page-h"><h1>Timetable</h1><p>Year 8 · 8A · Week 10</p></div>
+  <div class="chip-row mb">${days.map(d=>`<button class="chip ${day===d?"on":""}" data-act="go" data-route="timetable" data-params='{"day":"${d}"}'>${d}${d==="Mon"?" (today)":""}</button>`).join("")}</div>
+  <div class="card"><div class="timeline">${pers.map(p=>{ if(typeof p.p!=="number") return `<div class="tl"><div class="t">${ampm(p.t)}</div><div class="b" style="background:var(--surface-2);border-style:dashed"><b>${p.p}</b></div></div>`; const s=subs[pi++]; const exam=day==="Mon"&&pi<=2; const col=SUBJECT_COLORS[s]||"blue";
+    return `<div class="tl"><div class="t">${ampm(p.t)}</div><div class="b ${day==="Mon"&&p.p===1?"now":""}"><div class="row"><span class="tag ${exam?"red":col}">${exam?"Exam":"P"+p.p}</span><div><b>${exam?"Mathematics exam":esc(s)}</b><span>${exam?"School Hall":`${esc(TEACHERS_BY_SUBJECT[s])} · Room ${esc(ROOMS[s])}`}</span></div></div></div></div>`; }).join("")}</div></div>`;
+};
+
+/* --- Assignments (student) --- */
+PAGES.assignments = () => { const u=state.user; const list=ASSIGNMENTS.filter(a=>a.cls===u.section); const todo=list.filter(a=>a.status==="todo"), done=list.filter(a=>a.status!=="todo");
+  return `<div class="page-h"><h1>Assignments</h1><p>${todo.length} to do · ${done.length} submitted or marked</p></div><div class="section-h" style="margin-top:0"><h2>To do</h2></div><div class="card">${todo.length?`<div class="list">${todo.sort((a,b)=>a.due.localeCompare(b.due)).map(assignItem).join("")}</div>`:emptyState("check","All caught up","Nothing is due right now.","green")}</div><div class="section-h"><h2>Done</h2></div><div class="card"><div class="list">${done.map(assignItem).join("")}</div></div>`; };
+
+/* --- Attendance (student) --- */
+PAGES.attendance = () => { const h=STUDENT_ATT_HISTORY; const pct=Math.round(h.present/h.total*100);
+  return `<div class="page-h"><h1>Attendance</h1><p>Term 3 · ${h.total} school days so far</p></div>
+  <div class="card"><div class="row" style="gap:18px"><div class="donut" style="background:conic-gradient(var(--green) ${pct}%,var(--orange) ${pct}% ${pct+3}%,var(--red) ${pct+3}% ${pct+4.5}%,var(--outline-2) 0)"><b>${pct}%</b></div><div class="grow grid g3" style="gap:8px">${kpi("Present",h.present,"days","green")}${kpi("Late",h.late,"days","orange")}${kpi("Absent",h.absent,"day","red")}</div></div><div class="hint mt">${ic("star","sm")}<span>Great record, Mia. Attendance above 95% keeps you on track for the Term 3 award.</span></div></div>
+  <div class="section-h"><h2>Recent days</h2></div><div class="card"><div class="list">${h.recent.map(r=>{ const m={P:["green","check","Present"],L:["orange","clock","Late"],A:["red","close","Absent"]}[r.s]; return `<div class="item"><div class="ic ${m[0]}">${ic(m[1])}</div><div class="tx"><b>${r.d}</b><span>${m[2]}${r.note?` · ${esc(r.note)}`:""}</span></div></div>`; }).join("")}</div></div>`; };
+
+/* --- Messages --- */
+PAGES.messages = () => { const u=state.user; const list=MESSAGES.filter(m=>m.to===u.role).sort((a,b)=>b.when.localeCompare(a.when));
+  return `<div class="page-h between"><div><h1>Messages</h1><p>${u.role==="student"?"Direct messages from your teachers":"Messages from parents, staff and the office"}</p></div><button class="btn" data-act="openSheet" data-kind="newMsg">${ic("add","sm")} New</button></div><div class="card">${list.length?`<div class="list">${list.map(msgItem).join("")}</div>`:emptyState("chat","No messages","")}</div>`; };
+
+/* --- Settings / profile --- */
+PAGES.settings = () => { const u=state.user; const prefs=state.pushPrefs; const rows=[["urgent","Urgent alerts","Weather closures, safety, bus disruptions"],["updates","School updates","Announcements and circulars"],["homework","Homework & assignments","New tasks and due-date reminders"],["bus","Bus updates","Delays and arrival alerts"],["exams","Exam reminders","The evening before and 1 hour before"]];
+  return `<div class="page-h"><h1>${u.role==="student"?"Profile":"Settings"}</h1><p>Account, notifications and access</p></div>
+  <div class="cols-eq"><div class="stack"><div class="card"><div class="row" style="gap:14px">${avatar(u,56)}<div class="grow"><b style="font-size:17px">${esc(u.name)}</b><br><span class="small muted">${esc(u.title)}</span><br><span class="tiny">${esc(u.email)}</span></div></div><div class="row mt wrap"><span class="role-badge" style="background:${u.color}">${ic("shield","sm")} ${u.role[0].toUpperCase()+u.role.slice(1)} access</span>${u.studentId?`<span class="tag grey">${u.studentId}</span>`:""}</div></div>
+    <div class="card"><div class="card-h"><h3>Permissions</h3></div><div class="list">${{admin:["Manage users, sections and buses","Publish school-wide broadcasts","View all dashboards and reports","Full activity history"],teacher:["Take attendance for my classes","Post updates to my classes and year levels","Share assignments and message students","View transport status"],student:["Receive updates for my year, class and bus","View timetable, attendance and exams","Submit assignments","Track my bus in real time"]}[u.role].map(p=>`<div class="item"><div class="ic green">${ic("check")}</div><div class="tx"><b class="small" style="font-weight:500">${p}</b></div></div>`).join("")}</div></div></div>
+  <div class="stack"><div class="card"><div class="card-h"><h3>Push notifications</h3></div>${rows.map(([k,t,s])=>`<div class="switch"><div><b>${t}</b><br><span class="tiny">${s}</span></div><button class="tg ${prefs[k]?"on":""}" data-act="togglePref" data-k="${k}" aria-label="${t}"></button></div>`).join("")}<div class="tiny mt-s">Quiet hours 9:00 pm – 7:00 am. Urgent alerts always come through.</div></div>
+    <div class="card"><div class="card-h"><h3>Account</h3></div><div class="list"><button class="item click" data-act="snack" data-msg="Password reset link sent to your email."><div class="ic grey">${ic("shield")}</div><div class="tx"><b>Change password</b></div>${ic("chevron")}</button><button class="item click" data-act="switchRole"><div class="ic blue">${ic("group")}</div><div class="tx"><b>Switch demo role</b><span>Try the admin, teacher or student experience</span></div>${ic("chevron")}</button><button class="item click" data-act="logout"><div class="ic red">${ic("logout")}</div><div class="tx"><b>Sign out</b></div>${ic("chevron")}</button></div></div></div></div>`; };
+
+/* ===== Sheets ===== */
+function sheetHTML(){
+  const k=state.modal; const d=state.sheetData; if(!k) return "";
+  let title="", body="", foot="";
+  if(k==="notice"){ const n=NOTICES.find(x=>x.id===d.id); const u=state.user; const col=n.priority==="urgent"?"red":(CAT_COLOR[n.category]||"blue");
+    title=""; body=`<div class="row wrap"><span class="tag ${col}">${n.category}</span>${n.priority==="urgent"?'<span class="tag red">Urgent</span>':""}<span class="tag grey">${targetLabel(n.target)}</span></div><h2 style="font-size:20px">${esc(n.title)}</h2><p class="small muted">${esc(n.author)} · ${fmtD(n.when,{year:true})} ${fmtT(n.when)}</p><p style="line-height:1.55">${esc(n.body)}</p>
+      ${u.role!=="student"?`<div class="card tint"><div class="card-h" style="margin-bottom:8px"><h3>Delivery</h3>${n.status==="scheduled"?'<span class="tag grey">Scheduled</span>':'<span class="tag green">Published</span>'}</div>${n.status==="scheduled"?`<p class="small muted">Will publish ${fmtD(n.when)} at ${fmtT(n.when)} to ${n.recipients.toLocaleString()} people${n.push?" with a push notification":""}.</p>`:`<div class="grid g3">${kpi("Recipients",n.recipients.toLocaleString(),"targeted")}${kpi("Delivered",`${Math.round(n.delivered/n.recipients*100)}%`,`${n.delivered.toLocaleString()} devices`,"green")}${kpi("Read",`${Math.round(n.read/n.delivered*100)}%`,`${n.read.toLocaleString()} opened`,"blue")}</div><div class="progress mt-s"><i style="width:${Math.round(n.read/n.recipients*100)}%"></i></div>`}</div>`:""}`;
+    foot = u.role==="student" ? `<button class="btn tonal" data-act="closeSheet">Got it</button>` : `${n.status==="scheduled"?`<button class="btn outline" data-act="publishNow" data-id="${n.id}">Publish now</button>`:`<button class="btn outline" data-act="resend" data-id="${n.id}">Resend to unread</button>`}<button class="btn" data-act="closeSheet">Done</button>`; }
+  else if(k==="assign"){ const a=ASSIGNMENTS.find(x=>x.id===d.id); const u=state.user; title=a.subject; body=`<h2 style="font-size:20px">${esc(a.title)}</h2><p class="small muted">${esc(a.teacher)} · Due ${fmtD(a.due,{year:true})}</p><p>${a.subject==="Mathematics"?"Complete exercises 7.3 and 7.4 (odd numbers) from the textbook. Show all working and bring your calculator to class.":"See the class update for full instructions and the marking rubric."}</p>${a.status==="marked"?`<div class="card tint"><b>Result: ${a.grade}</b><br><span class="small muted">"Confident tonal work — push the contrast in the shadows next time."</span></div>`:a.status==="submitted"?`<div class="tag blue">Submitted · awaiting marking</div>`:""}`;
+    foot = u.role==="student"&&a.status==="todo" ? `<button class="btn outline" data-act="closeSheet">Close</button><button class="btn" data-act="submitAssign" data-id="${a.id}">${ic("attach","sm")} Upload & submit</button>` : `<button class="btn" data-act="closeSheet">Close</button>`; }
+  else if(k==="msg"){ const m=MESSAGES.find(x=>x.id===d.id); m.read=true; title=""; body=`<h2 style="font-size:19px">${esc(m.subject)}</h2><p class="small muted">${esc(m.from)} · ${fmtD(m.when)} ${fmtT(m.when)}</p><p style="line-height:1.55">${esc(m.text)}</p><div class="field"><label>Reply</label><textarea id="reply" placeholder="Write a reply…" style="min-height:80px"></textarea></div>`; foot=`<button class="btn outline" data-act="closeSheet">Close</button><button class="btn" data-act="sendReply">${ic("send","sm")} Send</button>`; }
+  else if(k==="newMsg"){ const u=state.user; title="New message"; body=`<div class="field"><label>To</label><select id="nm-to">${(u.role==="student"?Object.values(TEACHERS_BY_SUBJECT).filter((v,i,a)=>a.indexOf(v)===i):[...ROSTERS["8A"].slice(0,8).map(s=>s.name+" (8A)"),"School Office","Transport Office"]).map(t=>`<option>${esc(t)}</option>`).join("")}</select></div><div class="field"><label>Subject</label><input id="nm-sub" placeholder="Subject"></div><div class="field"><label>Message</label><textarea id="nm-body"></textarea></div>`; foot=`<button class="btn outline" data-act="closeSheet">Cancel</button><button class="btn" data-act="sendNew">${ic("send","sm")} Send</button>`; }
+  else if(k==="addEvent"){ title="Add to calendar"; body=`<div class="field"><label>Title</label><input id="ev-title" placeholder="e.g. Year 9 city excursion"></div><div class="two-col"><div class="field"><label>Date</label><input id="ev-date" type="date" value="${state.calSel}"></div><div class="field"><label>Type</label><select id="ev-type"><option value="event">Academic event</option><option value="holiday">Holiday / closure</option><option value="exam">Examination</option></select></div></div><div class="switch"><div><b>Notify the whole school</b><br><span class="tiny">Publishes a notice and push alert</span></div><button class="tg on" id="ev-notify" data-act="toggleSelf"></button></div>`; foot=`<button class="btn outline" data-act="closeSheet">Cancel</button><button class="btn" data-act="saveEvent">Save</button>`; }
+  else if(k==="addExam"){ title="Add examination"; body=`<div class="two-col"><div class="field"><label>Subject</label><input id="ex-sub" placeholder="e.g. Humanities"></div><div class="field"><label>Year</label><select id="ex-year">${YEARS.map(y=>`<option ${y===state.examYear?"selected":""}>${y}</option>`).join("")}</select></div></div><div class="two-col"><div class="field"><label>Date</label><input id="ex-date" type="date" value="2026-10-08"></div><div class="field"><label>Start time</label><input id="ex-time" type="time" value="09:00"></div></div><div class="two-col"><div class="field"><label>Duration (min)</label><input id="ex-dur" type="number" value="60"></div><div class="field"><label>Venue</label><input id="ex-venue" value="School Hall"></div></div>`; foot=`<button class="btn outline" data-act="closeSheet">Cancel</button><button class="btn" data-act="saveExam">Save as upcoming</button>`; }
+  else if(k==="examChange"){ const e=EXAMS.find(x=>x.id===d.id); title="Change exam"; body=`<p class="small muted">${esc(e.subject)} · Year ${e.year} · currently ${fmtD(e.date)} ${ampm(e.time)}</p><div class="two-col"><div class="field"><label>New date</label><input id="ex-date" type="date" value="${e.date}"></div><div class="field"><label>Start time</label><input id="ex-time" type="time" value="${pad(e.time.split(":")[0])}:${e.time.split(":")[1]}"></div></div><div class="field"><label>Venue</label><input id="ex-venue" value="${esc(e.venue)}"></div><div class="hint">${ic("bell","sm")}<span>Students in Year ${e.year} will get a push notification about the change.</span></div>`; foot=`<button class="btn outline" data-act="closeSheet">Cancel</button><button class="btn" data-act="applyExamChange" data-id="${e.id}">Save & notify</button>`; }
+  else if(k==="assignDriver"){ const b=BUSES.find(x=>x.id===d.id); title=`Assign driver · ${b.route}`; body=`<div class="field"><label>Driver</label><select id="dr-name">${["Maria Kostas (relief)","James Whitlock (relief)","Angela Ruiz","Kevin Marsh","Priya Raman","Tony Bekiaris"].map(n=>`<option>${n}</option>`).join("")}</select></div><div class="field"><label>Vehicle</label><input value="${b.rego}" readonly></div><div class="switch"><div><b>Notify riders' families</b><br><span class="tiny">"A relief driver will operate ${b.route} tomorrow."</span></div><button class="tg on" id="dr-notify" data-act="toggleSelf"></button></div>`; foot=`<button class="btn outline" data-act="closeSheet">Cancel</button><button class="btn" data-act="saveDriver" data-id="${b.id}">Assign</button>`; }
+  else if(k==="addStudent"){ title="Add student"; body=`<div class="two-col"><div class="field"><label>First name</label><input id="st-first"></div><div class="field"><label>Last name</label><input id="st-last"></div></div><div class="two-col"><div class="field"><label>Class</label><select id="st-class">${SECTIONS.map(c=>`<option>${c}</option>`).join("")}</select></div><div class="field"><label>Bus route</label><select id="st-route"><option value="">None</option>${BUSES.map(b=>`<option value="${b.id}">${b.route}</option>`).join("")}</select></div></div><div class="field"><label>Parent / guardian email</label><input id="st-email" type="email" placeholder="parent@example.com"><span class="help">An invitation with app login details is sent on save.</span></div>`; foot=`<button class="btn outline" data-act="closeSheet">Cancel</button><button class="btn" data-act="saveStudent">Save & invite</button>`; }
+  else if(k==="student"){ const s=Object.values(ROSTERS).flat().find(x=>x.id===d.id); title=""; body=`<div class="row" style="gap:14px"><span class="avatar" style="background:#0F9D93;width:56px;height:56px;font-size:20px">${s.name.split(" ").map(x=>x[0]).join("")}</span><div><b style="font-size:18px">${esc(s.name)}</b><br><span class="small muted">Class ${s.section} · Year ${s.section[0]}</span></div></div><div class="grid g3">${kpi("Attendance",`${s.att}%`,"Term 3",s.att>=93?"green":"orange")}${kpi("Late","2","days","orange")}${kpi("Bus",s.name==="Mia Nguyen"?"R12":"—","route")}</div><div class="field"><label>Guardian</label><input value="${esc(s.name.split(" ")[1])} family · 0412 000 ${String(s.id.length*37).padStart(3,"0")}" readonly></div>`; foot=`<button class="btn outline" data-act="closeSheet">Close</button><button class="btn tonal" data-act="snack" data-msg="Message sent to ${esc(s.name.split(" ")[0])}'s family.">${ic("chat","sm")} Message family</button>`; }
+  else if(k==="more"){ title="More"; const nav=NAV[state.user.role].slice(4); body=`<div class="list">${nav.map(n=>`<button class="item click" data-act="go" data-route="${n.r}"><div class="ic ${state.route===n.r?"blue":"grey"}">${ic(n.i)}</div><div class="tx"><b>${n.l}</b></div>${ic("chevron")}</button>`).join("")}</div>`; foot=""; }
+  else if(k==="switchRole"){ title="Switch demo role"; body=`<div class="role-cards">${USERS.map(u=>`<button class="role-card" data-act="login" data-id="${u.id}"><span class="av" style="background:${u.color}">${u.initials}</span><span class="who"><b>${esc(u.name)}</b><span>${esc(u.title)}</span></span>${ic("chevron")}</button>`).join("")}</div>`; foot=""; }
+  return `<div class="scrim" data-act="closeSheet"><div class="sheet" role="dialog" aria-modal="true" onclick="event.stopPropagation()"><div class="grab"></div><div class="sheet-h"><h2>${esc(title)}</h2><button class="icon-btn" data-act="closeSheet" aria-label="Close">${ic("close")}</button></div><div class="sheet-b">${body}</div>${foot?`<div class="sheet-f">${foot}</div>`:""}</div></div>`;
+}
+
+/* ===== Notification centre ===== */
+function notifPanelHTML(){ if(!state.notifOpen) return ""; const list=state.notifs[state.user.role]; const unread=list.filter(n=>!n.read).length;
+  return `<div class="notif-panel"><div class="hd"><button class="icon-btn" data-act="closeNotif" aria-label="Close">${ic("back")}</button><h2>Notifications</h2>${unread?`<button class="btn sm text" data-act="readAll">Mark all read</button>`:""}</div><div class="bd">${list.length?`<div class="list">${list.map(n=>{ const [c,i]=PUSH_STYLE[n.type]||PUSH_STYLE.update; return `<button class="item click ${n.read?"":"unread"}" data-act="openNotif" data-id="${n.id}"><div class="ic ${c}">${ic(i)}</div><div class="tx"><b>${esc(n.title)}</b><span>${esc(n.body)}</span><span class="tiny">${rel(n.when)}</span></div>${ic("chevron")}</button>`; }).join("")}</div>`:emptyState("bell","You're all caught up","")}</div></div>`; }
+
+/* ===== Login ===== */
+function loginHTML(){ return `<div class="login"><div class="login-hero"><div class="glow"></div><div class="crest">${ic("school","lg")}</div><h1>One connected platform for ${esc(SCHOOL.name)}</h1><p>Updates, live bus tracking, timetables, exams and attendance — in one secure app for staff, students and families.</p><div class="pills"><span class="pill">Mobile + web</span><span class="pill">Role-based access</span><span class="pill">Push notifications</span><span class="pill">Live bus tracking</span></div></div>
+  <div class="login-body"><div><h2>Sign in</h2><p class="muted small mt-s">Choose a demo account to explore the experience for each role.</p></div><div class="role-cards">${USERS.map(u=>`<button class="role-card" data-act="login" data-id="${u.id}"><span class="av" style="background:${u.color}">${u.initials}</span><span class="who"><b>${esc(u.name)}</b><span>${esc(u.title)}</span></span><span class="role-badge" style="background:${u.color}">${u.role[0].toUpperCase()+u.role.slice(1)}</span></button>`).join("")}</div>
+  <div class="divider-text">or sign in with your school account</div><div class="stack"><div class="field"><label>Email</label><input type="email" placeholder="name@bgs.vic.edu.au"></div><div class="field"><label>Password</label><input type="password" placeholder="••••••••"></div><button class="btn block" data-act="login" data-id="u-student">Sign in</button><p class="tiny center">Protected by single sign-on · ${esc(SCHOOL.suburb)}</p></div></div></div>`; }
+
+/* ===== Shell ===== */
+function shellHTML(){
+  const u=state.user; const nav=NAV[u.role]; const unread=unreadNotifs(); const title=PAGE_TITLES[state.route]||"Home";
+  const navBtn=(n,cls)=>`<button class="nav ${state.route===n.r||(state.route==="classDetail"&&n.r==="classes")||(state.route==="compose"&&n.r==="updates")?"on":""}" data-act="go" data-route="${n.r}"><span class="pill">${ic(n.i)}</span><span>${n.l}</span></button>`;
+  const primary = u.role==="admin"?{l:"New broadcast",r:"compose",i:"campaign"}:u.role==="teacher"?{l:"Post update",r:"compose",i:"edit"}:{l:"Track my bus",r:"transport",i:"bus"};
+  const mobileNav = nav.slice(0,4).map(n=>`<button class="${state.route===n.r||(state.route==="classDetail"&&n.r==="classes")?"on":""}" data-act="go" data-route="${n.r}"><span class="pill">${ic(n.i)}</span>${n.l}</button>`).join("") + `<button class="${nav.slice(4).some(n=>n.r===state.route)?"on":""}" data-act="openSheet" data-kind="more"><span class="pill">${ic("menu")}</span>More</button>`;
+  const page = (PAGES[state.route]||PAGES.home)();
+  return `<div class="shell">
+    <nav class="rail" aria-label="Main"><div class="brand">${ic("school")}</div><button class="primary-action" data-act="go" data-route="${primary.r}" aria-label="${primary.l}">${ic(primary.i)}</button>${nav.map(n=>navBtn(n)).join("")}<div class="spacer"></div><button class="nav" data-act="logout"><span class="pill">${ic("logout")}</span><span>Sign out</span></button></nav>
+    <nav class="drawer" aria-label="Main"><div class="brand"><div class="mark">${ic("school")}</div><div><b>${esc(SCHOOL.name)}</b><span>${esc(SCHOOL.term)}</span></div></div><button class="primary-action" data-act="go" data-route="${primary.r}">${ic(primary.i)} ${primary.l}</button>${nav.map(n=>navBtn(n)).join("")}<div class="spacer"></div><div class="me">${avatar(u)}<div class="grow"><b>${esc(u.name)}</b><span>${u.role[0].toUpperCase()+u.role.slice(1)}</span></div><button class="icon-btn" data-act="logout" aria-label="Sign out">${ic("logout")}</button></div></nav>
+    <header class="topbar"><div class="ttl">${esc(title)}<small>${esc(SCHOOL.name)} · ${u.role[0].toUpperCase()+u.role.slice(1)}</small></div><button class="icon-btn" data-act="openNotif" aria-label="Notifications">${ic("bell")}${unread?`<span class="badge">${unread}</span>`:""}</button><button class="icon-btn" data-act="go" data-route="settings" aria-label="Profile">${avatar(u,32)}</button></header>
+    <main class="content">${page}</main>
+    <nav class="bottom-nav" aria-label="Main">${mobileNav}</nav>
+    ${state.route!=="compose"&&state.route!=="transport"?`<button class="fab" data-act="go" data-route="${primary.r}">${ic(primary.i)} ${primary.l}</button>`:""}
+  </div>`;
+}
+function render(){ const app=$("#app"); app.innerHTML = state.user ? shellHTML() : loginHTML(); $("#modal").innerHTML = state.user ? sheetHTML()+notifPanelHTML() : ""; document.body.style.overflow = (state.modal||state.notifOpen)?"hidden":""; }
+
+/* ===== Actions ===== */
+function readForm(id){ const el=document.getElementById(id); return el?el.value.trim():""; }
+function addNotice(n){ n.id=++NOTICE_SEQ; NOTICES.unshift(n); ACTIVITY.unshift({when:"2026-09-14T09:20", who:state.user.name, what:`${n.status==="scheduled"?"Scheduled":"Published"} “${n.title}” to ${targetLabel(n.target)}`}); }
+const ACTIONS = {
+  login: el=>login(el.dataset.id), logout: ()=>logout(), back: ()=>state.params.cls?go("classDetail",{cls:state.params.cls,tab:"updates"}):go("updates"),
+  go: el=>{ const p=el.dataset.params?JSON.parse(el.dataset.params):{}; if(el.dataset.route==="compose"&&p.cls) p.level="class"; go(el.dataset.route,p); },
+  openSheet: el=>openSheet(el.dataset.kind,{id:el.dataset.id}), closeSheet: ()=>closeSheet(), switchRole: ()=>openSheet("switchRole"),
+  openNotif: ()=>{ state.notifOpen=true; state.modal=null; render(); }, closeNotif: ()=>{ state.notifOpen=false; render(); },
+  readAll: ()=>{ state.notifs[state.user.role].forEach(n=>n.read=true); render(); },
+  openNotice: el=>{ const id=+el.dataset.id; if(state.user.role==="student") READ_BY_STUDENT.add(id); openSheet("notice",{id}); },
+  openAssign: el=>openSheet("assign",{id:el.dataset.id}), openMsg: el=>openSheet("msg",{id:el.dataset.id}),
+  dismissPush: ()=>{ $("#push").innerHTML=""; }, snack: el=>snack(el.dataset.msg),
+  filterUpdates: el=>{ state.updatesFilter=el.dataset.f; render(); },
+  setLevel: el=>{ state.params.level=el.dataset.level; keepCompose(); render(); }, setPri: el=>{ state.params.priority=el.dataset.p; keepCompose(); render(); }, setWhen: el=>{ state.params.schedule=el.dataset.w==="later"; keepCompose(); render(); },
+  togglePush: ()=>{ state.params.push = state.params.push===false; keepCompose(); render(); }, toggleSelf: el=>el.classList.toggle("on"),
+  attach: ()=>{ const s=$("#c-attach"); s.textContent="Term3_timetable.pdf (attached)"; snack("Attachment added","attach"); },
+  publish: ()=>{ const title=readForm("c-title"), body=readForm("c-body"); if(!title){ snack("Add a title before publishing","warning"); $("#c-title").focus(); return; }
+    const u=state.user, d=state.params; const level=d.level||(u.role==="admin"?"school":"class"); const value= level==="year"?+readForm("c-year"): level==="class"?readForm("c-class"): level==="route"?readForm("c-route"): undefined;
+    const cat=readForm("c-cat"); const isAssign=d.kind==="assignment"; const sched=d.schedule; const when = sched?`${readForm("c-date")}T${readForm("c-time")}`:"2026-09-14T09:20";
+    const reach={school:3026,year:452,class:26,route:41}[level];
+    const n={ title, body: body||(isAssign?`Due ${fmtD(readForm("c-due"))}.`:""), category:cat, target:{level,value}, priority:d.priority||"normal", author:u.name, when, status:sched?"scheduled":"published", push:d.push!==false, recipients:reach, delivered:sched?0:reach-Math.round(reach*0.01), read:sched?0:Math.round(reach*0.12) };
+    addNotice(n); if(isAssign) ASSIGNMENTS.push({id:"a"+Date.now(), cls:value||"8A", subject:"Mathematics", title, due:readForm("c-due")||"2026-09-18", status:"todo", teacher:"Ms Whitfield"});
+    if(!sched){ state.notifs.student.unshift({id:"n"+Date.now(), title, body: body.slice(0,90)||cat, type: n.priority==="urgent"?"urgent":cat==="Homework"?"homework":"update", when, read:false, link:{route:"updates",id:n.id}}); }
+    go(d.cls?"classDetail":"updates", d.cls?{cls:d.cls,tab:"updates"}:{});
+    snack(sched?`Scheduled for ${fmtD(when)} at ${fmtT(when)}`:`Published to ${targetLabel(n.target)} · ${reach.toLocaleString()} recipients`);
+    if(!sched && n.push) setTimeout(()=>pushToast({title, body: body.slice(0,90)||`${cat} · ${targetLabel(n.target)}`, type:n.priority==="urgent"?"urgent":"update"}),700); },
+  publishNow: el=>{ const n=NOTICES.find(x=>x.id===+el.dataset.id); n.status="published"; n.when="2026-09-14T09:20"; n.delivered=n.recipients-30; n.read=Math.round(n.recipients*.1); closeSheet(); snack("Published now"); setTimeout(()=>pushToast({title:n.title,body:n.body.slice(0,90),type:"update"}),600); },
+  resend: el=>{ const n=NOTICES.find(x=>x.id===+el.dataset.id); closeSheet(); snack(`Resent to ${(n.delivered-n.read).toLocaleString()} people who haven't read it`,"send"); },
+  calNav: el=>{ const m=state.calMonth; state.calMonth=new Date(m.getFullYear(),m.getMonth()+ +el.dataset.d,1); render(); }, calSel: el=>{ state.calSel=el.dataset.d; render(); },
+  saveEvent: ()=>{ const t=readForm("ev-title"); if(!t){ snack("Give the event a title","warning"); return; } const d=readForm("ev-date"), type=readForm("ev-type"); CAL.push({d,type,title:t}); state.calSel=d; state.calMonth=new Date(parseD(d).getFullYear(),parseD(d).getMonth(),1);
+    if($("#ev-notify").classList.contains("on")){ addNotice({title:t, body:`${type==="holiday"?"The school is closed on":"Scheduled for"} ${fmtD(d,{year:true})}.`, category:type==="holiday"?"Holiday":type==="exam"?"Exam":"Event", target:{level:"school"}, priority:"normal", author:state.user.name, when:"2026-09-14T09:20", status:"published", push:true, recipients:3026, delivered:2990, read:300}); setTimeout(()=>pushToast({title:t, body:fmtD(d,{year:true}), type:"update"}),700); }
+    closeSheet(); snack("Added to the school calendar"); },
+  examYear: el=>{ state.examYear=+el.dataset.y; render(); }, toggleReminders: ()=>{ state.reminders=!state.reminders; render(); snack(state.reminders?"Exam reminders on":"Exam reminders off","bell"); },
+  examAction: el=>{ const e=EXAMS.find(x=>x.id===el.dataset.id); if(e.status==="upcoming"){ e.status="published"; addNotice({title:`Year ${e.year} ${e.subject} exam published — ${fmtD(e.date)}`, body:`${ampm(e.time)} · ${e.dur} min · ${e.venue}. Sections ${e.sections}.`, category:"Exam", target:{level:"year",value:e.year}, priority:"normal", author:"Curriculum Office", when:"2026-09-14T09:20", status:"published", push:true, recipients:452, delivered:448, read:40}); render(); snack(`Published to Year ${e.year} with push notification`); setTimeout(()=>pushToast({title:`${e.subject} exam published`, body:`${fmtD(e.date)} · ${ampm(e.time)} · ${e.venue}`, type:"exam"}),700); } else openSheet("examChange",{id:e.id}); },
+  applyExamChange: el=>{ const e=EXAMS.find(x=>x.id===el.dataset.id); e.date=readForm("ex-date")||e.date; e.time=readForm("ex-time").replace(/^0/,"")||e.time; e.venue=readForm("ex-venue")||e.venue; e.status="postponed"; if(e.date>=isoToday()) { const i=CAL.findIndex(c=>c.type==="exam"&&c.title.includes(e.subject)&&c.title.includes(`Year ${e.year}`)); if(i>-1) CAL[i].d=e.date; }
+    addNotice({title:`Change: Year ${e.year} ${e.subject} exam moved to ${fmtD(e.date)}`, body:`New time ${ampm(e.time)} at ${e.venue}. Duration unchanged (${e.dur} min).`, category:"Exam", target:{level:"year",value:e.year}, priority:"urgent", author:"Curriculum Office", when:"2026-09-14T09:20", status:"published", push:true, recipients:452, delivered:450, read:25}); closeSheet(); snack(`Year ${e.year} notified of the change`); setTimeout(()=>pushToast({title:`Exam change: ${e.subject}`, body:`Now ${fmtD(e.date)} · ${ampm(e.time)} · ${e.venue}`, type:"exam"}),700); },
+  saveExam: ()=>{ const s=readForm("ex-sub"); if(!s){ snack("Enter a subject","warning"); return; } const y=+readForm("ex-year"); EXAMS.push({id:"e"+Date.now(), subject:s, date:readForm("ex-date"), time:readForm("ex-time").replace(/^0/,""), dur:+readForm("ex-dur")||60, year:y, sections:"A / B", venue:readForm("ex-venue")||"School Hall", status:"upcoming"}); state.examYear=y; closeSheet(); snack("Exam added as upcoming — publish when ready"); },
+  selBus: el=>{ state.transportSel=el.dataset.id; state.params={id:el.dataset.id}; render(); },
+  saveDriver: el=>{ const b=BUSES.find(x=>x.id===el.dataset.id); b.driver=readForm("dr-name").replace(" (relief)",""); if(b.status==="needs-driver") b.status="scheduled"; if(b.status==="scheduled"){ b.status="moving"; state.bus[b.id].progress=0.05; } ACTIVITY.unshift({when:"2026-09-14T09:20", who:state.user.name, what:`Assigned driver ${b.driver} to ${b.route}`}); const notify=$("#dr-notify").classList.contains("on"); closeSheet(); snack(`${b.driver} assigned to ${b.route}${notify?" · families notified":""}`); if(notify) setTimeout(()=>pushToast({title:`${b.route}: relief driver assigned`, body:`${b.driver} will operate ${b.route}. Times unchanged.`, type:"bus"}),700); },
+  busBack: el=>{ const b=BUSES.find(x=>x.id===el.dataset.id); b.status="moving"; b.run="Morning run"; b.riders=44; state.bus[b.id].progress=0.02; render(); snack(`${b.route} returned to service`); },
+  peopleTab: el=>{ state.peopleTab=el.dataset.t; render(); },
+  saveStudent: ()=>{ const f=readForm("st-first"), l=readForm("st-last"); if(!f||!l){ snack("Enter the student's name","warning"); return; } const c=readForm("st-class"); if(!ROSTERS[c]) ROSTERS[c]=[]; ROSTERS[c].unshift({id:`${c}-${Date.now()}`, name:`${f} ${l}`, section:c, att:100}); ACTIVITY.unshift({when:"2026-09-14T09:20", who:state.user.name, what:`Added student ${f} ${l} to ${c}`}); state.peopleQ=""; state.peopleTab="students"; closeSheet(); snack(`${f} ${l} added to ${c} · invitation sent`); },
+  att: el=>{ const {cls,id,v}=el.dataset; state.attDraft[cls]=state.attDraft[cls]||{}; state.attDraft[cls][id]=v; render(); },
+  submitAtt: el=>{ const cls=el.dataset.cls; const draft=state.attDraft[cls]||{}; const absent=Object.entries(draft).filter(([,v])=>v==="A").length, late=Object.entries(draft).filter(([,v])=>v==="L").length; state.attSubmitted[cls]="9:52 am"; const i=PENDING_TEACHER_ACTIONS.findIndex(a=>a.cls===cls); if(i>-1) PENDING_TEACHER_ACTIONS.splice(i,1); render(); snack(`${cls} roll submitted · ${absent} absent, ${late} late${absent?" · families notified":""}`); },
+  submitAssign: el=>{ const a=ASSIGNMENTS.find(x=>x.id===el.dataset.id); a.status="submitted"; closeSheet(); snack("Submitted — your teacher has been notified"); },
+  sendReply: ()=>{ const t=readForm("reply"); if(!t){ snack("Write a reply first","warning"); return; } closeSheet(); snack("Reply sent","send"); },
+  sendNew: ()=>{ if(!readForm("nm-sub")&&!readForm("nm-body")){ snack("Add a subject or message","warning"); return; } closeSheet(); snack(`Message sent to ${readForm("nm-to")}`,"send"); },
+  togglePref: el=>{ state.pushPrefs[el.dataset.k]=!state.pushPrefs[el.dataset.k]; render(); },
+  nudge: el=>snack(`Reminder sent to ${el.dataset.who}`,"send")
+};
+function keepCompose(){ // preserve typed text across re-renders of the compose page
+  state.params.title=readForm("c-title"); state.params.body=readForm("c-body"); const c=document.getElementById("c-cat"); if(c) state.params.category=c.value; }
+
+document.addEventListener("click", e=>{
+  const el=e.target.closest("[data-act]"); if(!el) return;
+  const act=el.dataset.act;
+  if(act==="openNotif" && el.dataset.id){ const n=state.notifs[state.user.role].find(x=>x.id===el.dataset.id); n.read=true; state.notifOpen=false; if(n.link.id&&n.link.route==="updates"){ go("updates"); openSheet("notice",{id:n.link.id}); } else go(n.link.route, n.link.id?{id:n.link.id}:(n.link.cls?{cls:n.link.cls,tab:"attendance"}:{})); return; }
+  if(ACTIONS[act]) ACTIONS[act](el, e);
+});
+document.addEventListener("input", e=>{ if(e.target.id==="people-q"){ state.peopleQ=e.target.value; const pos=e.target.selectionStart; render(); const q=$("#people-q"); if(q){ q.focus(); q.setSelectionRange(pos,pos); } } });
+document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ if(state.modal) closeSheet(); else if(state.notifOpen){ state.notifOpen=false; render(); } } });
+render();
+
+</script>
+</body>
+</html>
